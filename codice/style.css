@@ -1,0 +1,143 @@
+body {          
+    background-color: peachpuff;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.card, .card-body, .card-header, .card-footer {       /*** card per la visualizzazione delle canzoni ***/
+    border-color: peachpuff;
+    border-width: 4px;
+}
+
+#titolo {       /*** titolo playlist ***/
+    font-family: 'Roboto', sans-serif;
+    font-size: 60px;
+    font-weight: bold;
+}
+
+#descrizione {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+#autore {
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    text-decoration: underline; /* Aggiunge la sottolineatura */
+    text-decoration-color: peachpuff;
+}
+
+#rowpeachpuff {
+    border: 0;
+  border-top: 2px dashed blue; /* Linea tratteggiata con colore */
+  color: blue; /* Facoltativo: Imposta anche il colore del testo, se presente */
+  height: 0;
+}
+
+#imgPlay {
+    width: 250px;
+    height: 250px;
+}
+
+#logonavbar{            /*** logo nella navbar dell'header ***/
+    width: 4%;
+    height: 4%;
+}
+
+#immagineAcc, #immagineReg, #confImmagineReg {      /*** immagine occhio form di registrazione ***/
+    width: 25px;
+    height: 20px;
+}
+
+#musicimage {           /*** immagine nella pagina index ***/
+    max-width: 90%;
+    height: auto;
+    padding: 10px;
+}
+
+.accReg {            /*** link per accedere alla registrazione ***/
+    color: white;
+}
+
+.accReg:hover {       /*** link per accedere alla registrazione quando mouse sopra***/
+        cursor: pointer;
+        color: peachpuff;
+}
+
+#buttonform {       /*** bottone form di registrazione ***/
+    display: flex;
+    padding-top: 10px;
+}
+
+#generiPreferiti .form-check, #artistiPreferiti .form-check {    /*** form-check per generi e artisti preferiti ***/
+    padding-left: 20px;
+    padding-right: 17px;
+    color: red;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* From Uiverse.io by andrew-demchenk0 */ 
+.button {
+    --main-focus: #2d8cf0;
+    --font-color: #dedede;
+    --bg-color-sub: #222;
+    --bg-color: #323232;
+    --main-color: #dedede;
+    position: relative;
+    width: 150px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .button, .button__icon, .button__text {
+    transition: all 0.3s;
+  }
+  
+  .button .button__text {
+    transform: translateX(25px);
+    color: var(--font-color);
+    font-weight: 600;
+  }
+  
+  .button .button__icon {
+    position: absolute;
+    transform: translateX(109px);
+    height: 100%;
+    width: 39px;
+    background-color: var(--bg-color-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button .svg {
+    width: 20px;
+    stroke: var(--main-color);
+  }
+  
+  .button:hover {
+    background: var(--bg-color);
+  }
+  
+  .button:hover .button__text {
+    color: transparent;
+  }
+  
+  .button:hover .button__icon {
+    width: 148px;
+    transform: translateX(0);
+  }
+  
+  .button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px var(--main-color);
+  }

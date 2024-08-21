@@ -1,0 +1,80 @@
+dY1MAUlJeqnvE2SD
+
+Return delle route: {status, code, value, error}
+
+
+{
+  bsonType: "object",
+  title: "Validatore playlist",
+  required: [
+    _id,
+    creatore,
+    descrizione,
+    pubblica,
+    tracce,
+    titolo,
+    tag,
+    durata
+  ],
+  proprieties: {
+    creatore: {
+      bsonType: "objectId",
+      description:
+        "Il creatore dev'essere un utente della piattaforma"
+    },
+    descrizione: {
+      bsonType: "string",
+      description:
+        "La descrizione deve essere una stringa"
+    },
+    pubblica: {
+      bsonType: "bool",
+      description:
+        "Il campo 'pubblica' indica se la playlist è pubblica o meno e deve essere un valore booleano"
+    },
+    tracce: {
+      bsonType: ["String"],
+      description:
+        "Le tracce devono essere un array di sitringhe indicanti l'id della traccia su spotify"
+    },
+    titolo: {
+      bsonType: "string",
+      description:
+        "Il titolo deve essere una stringa"
+    },
+    tag: {
+      bsonType: ["string"],
+      description:
+        "I tag devono essere un array di stringhe"
+    },
+    durata: {
+      bsonType: "int",
+      minimum: 0,
+      description:
+        "La durata deve essere un intero maggiore di 0"
+    }
+  },
+  additionalProperties: "false"
+}
+
+66bcd86fa2472518214ec03b
+66bcda61a2472518214ec03e
+66bcda79a2472518214ec03f
+66bcda8ca2472518214ec040
+66bcdaaaa2472518214ec041
+66bcdab9a2472518214ec042
+66bcdac6a2472518214ec043
+66bcdad5a2472518214ec044
+66bcdae8a2472518214ec045
+66bcdaf4a2472518214ec046
+66bcdb01a2472518214ec047
+66bcdb10a2472518214ec048
+66bcdb20a2472518214ec049
+66bcdb2fa2472518214ec04a
+66bcdb4ca2472518214ec04d
+66bcdb57a2472518214ec04e
+66bcdb63a2472518214ec04f
+66bcdb73a2472518214ec050
+66bcdb88a2472518214ec051
+66bcdb97a2472518214ec052
+66bcdba7a2472518214ec053

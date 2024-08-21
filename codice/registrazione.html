@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>MusicApp</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body onload="onload()">
+        <header>
+            <nav
+                class="container-fluid navbar navbar-expand-lg navbar-dark bg-dark"
+            >
+                <div class="container">
+                    <img
+                        src="img\musicapp.jpg"
+                        class="img-fluid rounded-4"
+                        alt="MusicApp"
+                        id="logonavbar"
+                    />
+                    <button
+                        class="navbar-toggler d-lg-none"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsibleNavId"
+                        aria-controls="collapsibleNavId"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    ></button>
+                    <div class="collapse navbar-collapse" id="collapsibleNavId">
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" aria-current="page"
+                                    >MusicApp! <span class="visually-hidden">(current)</span></a
+                                >
+                            </li>
+                            <li class="nav-item visually-hidden">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item dropdown visually-hidden">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    id="dropdownId"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >Dropdown</a
+                                >
+                                <div class="dropdown-menu" aria-labelledby="dropdownId">
+                                    <a class="dropdown-item" href="#">Action 1</a>
+                                    <a class="dropdown-item" href="#">Action 2</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <form class="d-flex my-2 my-lg-0 visually-hidden">
+                            <input
+                                class="form-control me-sm-2"
+                                type="text"
+                                placeholder="Search"
+                            />
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                                Search
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+                
+                
+            
+        </header>
+        <br>
+        <br>
+        <main>
+            <div class="contaier-md">
+                <div class="row">
+        
+                    <div class="col-2"></div>
+        
+                    <div class="col bg-dark rounded-4">
+                        <div class="row" style="padding: 5% 2% 5% 2%;">
+                            <div class="row">
+                                <div class="col-12 col-xxl-12">
+                                    <h3 id="nomeut">Continua la registrazione:</h3>
+                                </div>
+                            </div>
+                            <form class="mt-4" id="formDati">
+                                
+                                <div class="row">
+                                    <div class="col-1 col-xxl-1">
+                                        <label class="col-form-label">Nome</label>
+                                    </div>
+                                    <div class="col-5 col-xxl-5">
+                                        <!-- Nome e cognome -->                               
+                                        <input type="text" id="Nome" placeholder="Nome" class="form-control" required>    
+                                    </div>
+                                    <div class="col-1 col-xxl-1">
+                                        <label class="col-form-label">Cognome</label>
+                                    </div>
+                                    <div class="col-5 col-xxl-5">
+                                        <input type="text" id="Cognome" placeholder="Cognome" class="form-control" required>                            
+                                    </div>
+                                </div>
+
+                                <div class="row gx-3 gy-3 mt-2">
+                                    <div class="col-1 col-xxl-1">
+                                        <label class="col-form-label">Email</label>
+                                    </div>
+                                    <div class="col-5 col-xxl-5">
+                                        <!-- Email -->
+                                            <input type="email" id="emailReg" placeholder="Email" class="form-control" required>
+                                    </div>
+
+                                    <!-- Sesso e data di nascita -->
+                                    <div class="col-1 col-xxl-1">
+                                        <label class="col-form-label">Sesso</label>
+                                    </div>
+                                    <div class="col-5 col-xxl-5">
+                                        <select id="sesso" class="form-select form-select-bg mb-2" required>
+                                            <option value="M">Maschio</option>
+                                            <option value="F">Femmina</option>
+                                        </select>    
+                                    </div>
+                                </div>
+
+                                <div class="row gx-3 gy-3 mt-2">
+                                    <div class="col-2 col-xxl-2">
+                                        <label class="col-form-label">Data di nascita</label>
+                                    </div>
+                                    <div class="col-4 col-xxl-4">
+                                        <input type="date" id="dataNascita" class="form-control" required>    
+                                    </div>
+                                    <div class="col-3 col-xxl-3">
+                                        <label class="col-form-label">Inserisci un artista preferito</label>
+                                    </div>
+                                    <div class="col-3 col-xxl-3">
+                                        <input type="text" id="artistaPref" class="form-control" required>    
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="input-group mb-3" id="generiPreferiti">
+                                    </div>
+                                </div>     
+
+                                <!-- Bottone di registrazione -->
+                                <div class="row mt-2">
+                                    <div class="form-group mb-3">
+                                        <div class="col-md-8"></div>
+                                        <div class="col-md-4"><button type="button" onclick="registrazione()" class="btn btn-block btn-primary ali">Registrati</button></div>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+        
+                    <div class="col-2"></div>
+        
+                </div>
+            </div>
+        </main>
+
+        <br>
+        <br>
+        
+        <footer>
+            <div class="container-fluid bg-dark text-white py-2 foot">
+                <div class="row text-center justify-content-center align-items-center">
+                    <div class="col-10">
+                        <p>Sito creato per MusicApp sotto licenza creativa BY-SA 4.0<br><a href="https://www.youtube.com/watch?v=8ybW48rKBME">Clicca qui per ricevere maggiori informazioni</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JavaScript Libraries -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+
+        <script src="func/reg.js"></script>
+    </body>
+</html>

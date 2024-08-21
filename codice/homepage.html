@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>MusicApp</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body onload="onload()" class="bg-dark">
+        <header>
+            <nav
+                class="container-fluid navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-3" style="border-color: peachpuff;"
+            >
+                <div class="container">
+                    <img
+                        src="img\musicapp.jpg"
+                        class="img-fluid rounded-4"
+                        alt="MusicApp"
+                        id="logonavbar"
+                    />
+                    <button
+                        class="navbar-toggler d-lg-none"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsibleNavId"
+                        aria-controls="collapsibleNavId"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    ></button>
+                    <div class="collapse navbar-collapse" id="collapsibleNavId">
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="homepage.html" aria-current="page"
+                                    >MusicApp! <span class="visually-hidden">(current)</span></a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Libreria personale</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Lista amici</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Modifica profilo</a>
+                            </li>
+                        </ul>
+                        <form class="d-flex my-2 my-lg-0">
+                            <input
+                                class="form-control me-sm-2"
+                                type="text"
+                                placeholder="Cerca una canzone, artista o album..."
+                            />
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                                Cerca
+                            </button>
+                        </form>
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+        
+                            <li class="nav-item">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                                    Logout
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+                
+                
+            
+        </header>
+
+        <br>
+
+        <main>
+            <div class="container-fluid text-white">
+                <!-- riga benveuto -->
+                <div class="row">
+                    <div class="col-12">
+                        <h3 id="benvenuto"></h3>
+                    </div>
+                </div>
+                <br>
+                <!-- riga playlist -->
+                <div class="row">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 id="testaPlaylist">Le tue playlist 
+                                <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    data-bs-target="#carouselId"
+                                    data-bs-slide="prev"
+                                >
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                </button>
+                                <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    data-bs-target="#carouselId"
+                                    data-bs-slide="next"
+                                >
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                </button>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row bg-dark" id="rigaPlaylist">
+                        
+                        
+                    </div>
+                </div>
+                <br>
+                <!-- riga playlist pubbliche -->
+                <div class="row">
+                    <div class="row">
+                        <div class="col">
+                            <h4 id="testaPubbliche">Le playlist pubblice</h4>
+                        </div>
+                    </div>
+                    <div class="row" id="rigaPubbliche">
+                            
+                    </div>
+                </div>
+                <br>
+                <!-- riga utenti -->
+                <div class="row">
+                    <div class="row">
+                        <div class="col">
+                            <h4 id="testaAmici">I tuoi amici</h4>
+                        </div>
+                    </div>
+                    <div class="row" id="rigaAmici">
+                    
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <br>
+        <br>
+        
+        <footer>
+            <div class="container-fluid bg-dark text-white py-2 foot border-top border-3">
+                <div class="row text-center justify-content-center align-items-center">
+                    <div class="col-10">
+                        <p>Sito creato per MusicApp sotto licenza creativa BY-SA 4.0<br><a href="https://www.youtube.com/watch?v=8ybW48rKBME">Clicca qui per ricevere maggiori informazioni</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JavaScript Libraries -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+
+        <script src="func/homepage.js"></script>
+    </body>
+</html>
