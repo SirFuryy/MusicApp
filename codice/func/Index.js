@@ -124,7 +124,7 @@ async function accedi() {
                     sesso: result.user.sesso,
                     utentiSeguiti: result.user.utentiSeguiti,
                     playlist: result.user.playlist,
-                    token: result.token
+                    token: result.user.token
                 }
                 sessionStorage.setItem('user', JSON.stringify(dataUtente));
                 // Redirect to homepage

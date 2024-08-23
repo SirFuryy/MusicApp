@@ -1,4 +1,4 @@
-import { connectToCluster } from "./connectMongo.js";
+import { connectToCluster, mongoClient } from "./connectMongo.js";
 import bcrypt from 'bcryptjs';
 import { z } from 'zod'; 
 
@@ -58,8 +58,7 @@ async function registrazione(data) {
     data.password = await bcrypt.hash(data.password, 10);
 
     try {
-    const mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Utenti');
     try {
         const id = await collection.insertOne(data);
@@ -67,8 +66,6 @@ async function registrazione(data) {
     } catch (error) {
         console.log(error);
         return {status: 'error', code: 500, error: 'Internal Server Error'};
-    } finally {
-        await closeMongo();
     }
     } catch (error) {
         console.log(error);

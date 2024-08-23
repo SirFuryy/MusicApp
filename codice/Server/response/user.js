@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { connectToCluster } from "./connectMongo.js";
+import { connectToCluster, mongoClient } from "./connectMongo.js";
 import { z } from 'zod';
 
 const utenteSchema = z.object({
@@ -21,7 +21,6 @@ const idSchema = z.string().length(24);
 
 async function utentiMisti(limit) {
     try {
-    const mongoClient = await connectToCluster();
     const db = mongoClient.db('TWM');
     const collection = db.collection('Utenti');
     try {
@@ -32,10 +31,8 @@ async function utentiMisti(limit) {
         });
 
         if(utenti.length === 0){
-            await closeMongo();
             return {status: 'void', code: 200, value: "nessun utente trovato"};
         } else {
-            await closeMongo();
             return {status: 'ok', code: 200, value: utenti};
         } 
     } catch (error) {
@@ -53,7 +50,6 @@ async function utenteSingolo(id) {
         return ({status: 'error', code: 400, error: "id non valido"});
     }
     try {
-        const mongoClient = await connectToCluster();
         const db = mongoClient.db('TWM');
         const collection = db.collection('Utenti');
         try {
@@ -69,8 +65,6 @@ async function utenteSingolo(id) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            await closeMongo();
         }
     } catch (error) {
         console.log(error);
@@ -82,9 +76,7 @@ async function amiciUtente(id) {
     if (!idSchema.safeParse(id).success) {
         return ({status: 'error', code: 400, error: "id non valido"});
     }
-    var mongoClient;
     try {
-    mongoClient = await connectToCluster();
     const db = mongoClient.db('TWM');
     const collection = db.collection('Utenti');
     try {
@@ -114,8 +106,6 @@ async function amiciUtente(id) {
     } catch (error) {
         console.log(error);
         return {status: 'error', code: 500, error: error};
-    } finally {
-        await mongoClient.close();
     }
 
 }
@@ -130,7 +120,6 @@ async function modificaUtente(id, data) {
     }
 
     try {
-        const mongoClient = await connectToCluster();
         const db = mongoClient.db('TWM');
         const collection = db.collection('Utenti');
         try {
@@ -148,8 +137,6 @@ async function modificaUtente(id, data) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            await closeMongo();
         }
     } catch (error) {
         console.log(error);
@@ -167,7 +154,6 @@ async function modificaSeguiti(id, idFollow) {
     }
 
     try {
-        const mongoClient = await connectToCluster();
         const db = mongoClient.db('TWM');
         const collection = db.collection('Utenti');
         try {
@@ -208,8 +194,6 @@ async function modificaSeguiti(id, idFollow) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            await closeMongo();
         }
     } catch (error) {
         console.log(error);
@@ -222,7 +206,6 @@ async function eliminaUtente(id) {
         return {status: 'error', code: 400, error: "id non valido"};
     }
     try {
-        const mongoClient = await connectToCluster();
         const db = mongoClient.db('TWM');
         const collection = db.collection('Utenti');
         try {
@@ -237,8 +220,6 @@ async function eliminaUtente(id) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            await closeMongo();
         }
     } catch (error) {
         console.log(error);
@@ -254,7 +235,6 @@ async function modificaPassword(data) {
     });
     
     try {
-        const mongoClient = await connectToCluster();
         const db = mongoClient.db("TWM");
         const collection = db.collection("Utenti");
     
@@ -275,9 +255,7 @@ async function modificaPassword(data) {
     } catch (error) {
         console.error(error);
         return {status: 'error', code: 500, error: error};
-    } finally {
-        await closeMongo();
-    }
+    } 
     }catch (error) {
         console.error(error);
         return {status: 'error', code: 500, error: error};

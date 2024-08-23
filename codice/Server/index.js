@@ -19,7 +19,7 @@ app.use(express.static('./public'));
 //opzioni per il CORS
 app.use((req, res, next)=>{         
 res.setHeader('Access-Control-Allow-Origin', '*')
-res.setHeader('Access-Control-Allow-Method', 'POST,GET,PUT,DELETE,OPTIONS')
+res.setHeader('Access-Control-Allow-Method', 'POST, GET, PUT, DELETE, OPTIONS')
 res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 next();
 })
@@ -31,9 +31,9 @@ const path = 'codice';
 let generi, artisti = [];
 var tokenlist = [
   {
-    token: 'kbp6ytktrsn811muuin6c',
-    user: 'emily.smith@example.com',
-    time: 1724166303947
+    token: 'ue5x83knhfm1801wqzppwzh',
+    user: 'alice92@example.com',
+    time: 1724402539450
   }
 ];
 
@@ -43,10 +43,12 @@ app.options('*', (req, res) => {
 
 // Definizione delle rotte
 app.get('/caricaGeneri', (req, res) => {      //restituisce i generi musicali
+  console.log("** route generi")
     res.json(generi);
 });
 
 app.post('/registrazione', async (req, res) => {    //effettua la registrazione
+  console.log("** route " + req.url);
     const data = req.body;
     await registrazione(data)
     .then((result) => {
@@ -55,16 +57,15 @@ app.post('/registrazione', async (req, res) => {    //effettua la registrazione
 });
 
 app.post('/login', async (req, res) => {    //effettua il login
+  console.log("** route " + req.url);
     const data = req.body;
     await login(data)
     .then((result) => {
-      //se il login è andato a buon fine viene creato un token
       if (result.status === 'ok') {
-        const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        console.log("creo "+token);
         const currentTime = new Date().getTime();
-        tokenlist.push({token: token, user: result.value.email, time: currentTime});
-        res.status(result.code).json({status: result.status, token: token, user: result.value});
+        tokenlist.push({token: result.value.token, user: result.value.email, time: currentTime});
+        console.log(tokenlist);
+        res.status(result.code).json({status: result.status, user: result.value});
       } else {
         res.status(result.code).json(result);
       }
@@ -72,6 +73,7 @@ app.post('/login', async (req, res) => {    //effettua il login
 });
 
 app.post('/user/password', checkToken, async (req, res) => {    //modifica la password
+  console.log("** route " + req.url);
   const data = req.body;
   await modPassword(data)
   .then((result) => {
@@ -80,6 +82,7 @@ app.post('/user/password', checkToken, async (req, res) => {    //modifica la pa
 });
 
 app.post('/logout', checkToken, (req, res) => {   //effettua il logout
+  console.log("** route " + req.url);
   const token = req.headers.authorization.replace("Bearer ", "");
   for (let index = 0; index < tokenlist.length; index++) {
     if (tokenlist[index].token === token) {
@@ -91,9 +94,10 @@ app.post('/logout', checkToken, (req, res) => {   //effettua il logout
 });
 
 app.get('/user/:id/playlist', checkToken, async (req, res) => {  //restituisce le playlist dell'utente
-  console.log("uscito dal middle")
+  console.log("** route " + req.url);
     var id = req.params.id;
-    await playlistUtente(id)
+    var token = req.headers.authorization.replace("Bearer ", "");
+    await playlistUtente(id, token)
     .then((result) => {
         console.log("qui fatto")
         res.status(result.code).json(result);
@@ -101,14 +105,17 @@ app.get('/user/:id/playlist', checkToken, async (req, res) => {  //restituisce l
 });
 
 app.get('/playlist', checkToken, async (req, res) => {      //restituisce le playlist pubbliche
+  console.log("** route " + req.url);
     const {limit} = req.query;
     playlistPubbliche(limit)
     .then((result) => {
+        console.log("playlist pubbliche torna con "+ result.value)
         res.status(result.code).json(result);
     });
 });
 
 app.get('/playlist/:id', async (req, res) => {   //restituisce la playlist con id specifico
+  console.log("** route " + req.url);
     var id  = req.params.id;
     await playlistSingola(id)
     .then((result) => {
@@ -117,6 +124,7 @@ app.get('/playlist/:id', async (req, res) => {   //restituisce la playlist con i
 });
 
 app.get('/user', async (req, res) => {    //restituisce una lista di utenti
+  console.log("** route " + req.url);
     const {limit} = req.query;
     await utentiMisti(limit)
     .then((result) => {
@@ -125,6 +133,7 @@ app.get('/user', async (req, res) => {    //restituisce una lista di utenti
 });
 
 app.get('/user/:id', async (req, res) => {    //restituisce un utente
+  console.log("** route " + req.url);
     var id  = req.params.id;
     await utenteSingolo(id)
     .then((result) => {
@@ -133,6 +142,7 @@ app.get('/user/:id', async (req, res) => {    //restituisce un utente
 });
 
 app.get('/user/:id/users', checkToken, async (req, res) => {    //restituisce la lista di amici di un utente
+  console.log("** route " + req.url);
     var id  = req.params.id;
     console.log("endpoint user")
     await amiciUtente(id)
@@ -143,6 +153,7 @@ app.get('/user/:id/users', checkToken, async (req, res) => {    //restituisce la
 });
 
 app.get('/song/:id', async (req, res) => {    //restituisce una canzone
+  console.log("** route " + req.url);
     var id  = req.params.id;
     await canzoneSingolaDB(id)
     .then((result) => {
@@ -151,6 +162,7 @@ app.get('/song/:id', async (req, res) => {    //restituisce una canzone
 });
 
 app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
+  console.log("** route " + req.url);
     const {idCanzoni} = req.body;
     await canzoniMultipleDB(idCanzoni)
     .then((result) => {
@@ -159,6 +171,7 @@ app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
 });
 
 app.put('/user/:id', async (req, res) => {    //modifica un utente
+  console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body;
     await modificaUtente(id, data)
@@ -167,7 +180,8 @@ app.put('/user/:id', async (req, res) => {    //modifica un utente
     });
 });
 
-app.put('/user/:id/users', async (req, res) => {    //aggiunge/toglie un follow
+app.put('/user/:id/users/mod', checkToken, async (req, res) => {    //aggiunge/toglie un follow
+  console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body;
     await modificaSeguiti(id, data)
@@ -177,6 +191,7 @@ app.put('/user/:id/users', async (req, res) => {    //aggiunge/toglie un follow
 });
 
 app.put('/playlist/:id', async (req, res) => {    //modifica una playlist
+  console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body;
     await modificaPlaylist(id, data)
@@ -186,6 +201,7 @@ app.put('/playlist/:id', async (req, res) => {    //modifica una playlist
 });
 
 app.put('/playlist/:id/songs', async (req, res) => {    //aggiunge/rimuove una canzone da una playlist
+  console.log("** route " + req.url);
     var id  = req.params.id;
     const {idCanzone, durata} = req.body;
     await modificaCanzonePlaylist(id, idCanzone)
@@ -212,6 +228,7 @@ app.put('/playlist/:id/songs', async (req, res) => {    //aggiunge/rimuove una c
 });
 
 app.delete('/playlist/:id', async (req, res) => {    //elimina una playlist
+  console.log("** route " + req.url);
     var id  = req.params.id;
     await eliminaPlaylist(id)
     .then((result) => {
@@ -220,6 +237,7 @@ app.delete('/playlist/:id', async (req, res) => {    //elimina una playlist
 });
 
 app.delete('/user/:id', async (req, res) => {    //elimina un utente
+  console.log("** route " + req.url);
     var id = req.params.id;
     await eliminaUtente(id)
     .then((result) => {
@@ -228,6 +246,7 @@ app.delete('/user/:id', async (req, res) => {    //elimina un utente
 });
 
 app.post('/playlist', async (req, res) => {    //crea una playlist
+  console.log("** route " + req.url);
     const data = req.body;
     await creaPlaylist(data)
     .then((result) => {
@@ -236,7 +255,7 @@ app.post('/playlist', async (req, res) => {    //crea una playlist
 });
 
 app.get('/search', async (req, res) => {    //ricerca
-    
+  console.log("** route " + req.url);
 });
 
 
@@ -281,6 +300,7 @@ function checkToken(req, res, next) {
   }
 
   if (!trovato) {
+    console.log("token non trovato:", token);
     return res.status(401).json({status: "token error", code:401, message: "Token non valido"});
   }
 }

@@ -136,7 +136,7 @@ async function gestisciProprie() {
     })
     .then(res => res.json())
     .then((result) => {
-        console.log(result.value);
+        console.log(result);
         if (result.status === 'ok') {
             playlistProprie = result.value;
             document.getElementById('testaPlaylist').innerHTML = `Le tue playlist  
@@ -153,9 +153,6 @@ async function gestisciProprie() {
         } else if (result.status === 'token error') {
             //eseguo il logout
             console.log('token error prop');
-            setTimeout(() => {
-                10*1000 
-            });
             sessionStorage.clear();
             window.location.replace("index.html");
         } else {

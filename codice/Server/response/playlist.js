@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { connectToCluster } from "./connectMongo.js";
+import { mongoClient } from "./connectMongo.js";
 import { z } from 'zod';
 
 const playlistSchema = z.object({
@@ -15,30 +15,40 @@ const playlistSchema = z.object({
 const idSchema = z.string().length(24);
 
 //ritorna le playlist dell'utente
-async function playlistUtente(id) {
+async function playlistUtente(id, token) {
     if (!idSchema.safeParse(id).success) {
         return ({status: 'error', code: 400, error: "id non valido"});
     }
-    var mongoClinet;
     try{
-    mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Utenti');
     try {
         let playlist = [];
-        const playlistUtente = await collection.findOne({ "_id": new ObjectId(id) });
+        const playlistUtente = await collection.findOne({ "_id": new ObjectId(id) }, { projection: { _id: 1, token: 1, playlist: 1 } });
         if (playlistUtente === null) {
             return {status: 'error', code: 404, error: "utente non trovato"};
         }
 
         const collectionPlaylist = db.collection('Playlist');
         for (let i = 0; i < playlistUtente.playlist.length; i++) {
-            await collectionPlaylist.findOne({"_id": new ObjectId(playlistUtente.playlist[i])})
+            await collectionPlaylist.findOne({"_id": new ObjectId(playlistUtente.playlist[i]), "pubblica": true})
             .then((result) => {
-                playlist.push(result);
-            }); 
+                if (result !== null) {
+                    playlist.push(result);
+                }
+            });
         }
-
+        if (playlistUtente.token === token) {
+            for (let i = 0; i < playlistUtente.playlist.length; i++) {
+                await collectionPlaylist.findOne({"_id": new ObjectId(playlistUtente.playlist[i]), "pubblica": false})
+                .then((result) => {
+                    if (result !== null) {
+                        playlist.push(result);
+                    }
+                }); 
+            }
+        }
+        
         if(playlist.length === 0){
             return {status: 'void', code: 200, value: "nessuna playlist trovata"};
         } else {
@@ -51,17 +61,13 @@ async function playlistUtente(id) {
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
         return {status: 'error', code: 500, error: error};
-    } finally {
-        await mongoClinet.close();
     }
 }
 
 //ritorna delle playlist pubbliche, in base al limite richiesto, partendo dalla più recente
 async function playlistPubbliche(limit) {
-    var mongoClinet;
     try {
-    mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
         let playlist = [];
@@ -84,8 +90,6 @@ async function playlistPubbliche(limit) {
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
         return {status: 'error', code:500, error: error};
-    } finally {
-        await mongoClinet.close();
     }
 }
 
@@ -95,8 +99,7 @@ async function playlistSingola(id) {
             return {status: 'error', code: 400, error: "id non valido"};
         }
         try {
-        const mongoClinet = await connectToCluster();
-        const db = mongoClinet.db('TWM');
+        const db = mongoClient.db('TWM');
         const collection = db.collection('Playlist');
         try {
             let result = await collection.findOne({ "_id": new ObjectId(id) })
@@ -111,8 +114,6 @@ async function playlistSingola(id) {
         } catch (error) {
             console.log(error);
             return{status: 'error', code: 500, error: error};
-        } finally {
-            await closeMongo();
         }
         } catch (error) {
             console.log("errore nella connessione al db: " + error);
@@ -133,8 +134,7 @@ async function modificaPlaylist(id, data) {
     }
 
     try{
-    const mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
 
     try {
@@ -149,9 +149,7 @@ async function modificaPlaylist(id, data) {
     } catch (error) {
         console.log(error);
         return{status: 'error', code: 500, error: error};
-    } finally {
-        await closeMongo();
-    }
+    } 
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
         return{status: 'error', code: 500, error: error};
@@ -163,8 +161,7 @@ async function eliminaPlaylist(id) {
         return{status: 'error', code: 400, error: "id non valido"};
     }
     try{
-    const mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
         return await collection.deleteOne({ "_id": new ObjectId(id) })
@@ -178,8 +175,6 @@ async function eliminaPlaylist(id) {
     } catch (error) {
         console.log(error);
         return{status: 'error', code: 500, error: error};
-    } finally {
-        await closeMongo();
     }
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
@@ -187,19 +182,33 @@ async function eliminaPlaylist(id) {
     }
 }
 
-async function creaPlaylist(data) {
+async function creaPlaylist(idUtente, data) {
+    if (!idSchema.safeParse(idUtente).success) {
+        return{status: 'error', code: 400, error: "id non valido"};
+    }
     if (!playlistSchema.safeParse(data).success) {
         return{status: 'error', code: 400, error: "dati non validi"};
     }
     try {
-    const mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
-        return await collection.insertOne(data)
+        await collection.insertOne(data)
         .then((result) => {
             if (result.acknowledged) {
-                return{status: 'ok', code: 201, value: result.insertedId};
+                try {
+                    db.collection('Utenti').updateOne({ "_id": new ObjectId(idUtente) }, { $push: { playlist: result.insertedId.toString() } })
+                    .then((result) => {
+                        if (result.modifiedCount === 1) {
+                            return{status: 'ok', code: 201, value: result};
+                        } else {
+                            return{status: 'error', code: 500, error: "errore nella creazione della playlist"};
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                    return{status: 'error', code: 500, error: error};
+                }
             } else {
                 return{status: 'error', code: 500, error: "errore nella creazione della playlist"};
             }
@@ -207,8 +216,6 @@ async function creaPlaylist(data) {
     } catch (error) {
         console.log(error);
         return{status: 'error', code: 500, error: error};
-    } finally {
-        await closeMongo();
     }
     } catch (error) {
         console.log("errore nella connessione al db: " + error);

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { connectToCluster } from "./connectMongo.js";
+import { connectToCluster, mongoClient } from "./connectMongo.js";
 import { z } from 'zod';
 import { getApi } from './connectAPI.js';
 
@@ -33,8 +33,7 @@ async function canzoneSingolaDB(idCanzone) {
         return {status: 'error', code: 400, error: "id non valido"};
     }
     try {
-        const mongoClinet = await connectToCluster();
-        const db = mongoClinet.db('TWM');
+        const db = mongoClient.db('TWM');
         const collection = db.collection('Canzoni');
         try {
             let result = await collection.findOne({ "_id": new ObjectId(idCanzone) });
@@ -42,9 +41,6 @@ async function canzoneSingolaDB(idCanzone) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            console.log('Chiusura connessione al db');
-            await mongoClinet.close()
         }
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
@@ -60,8 +56,7 @@ async function canzoniMultipleDB(idCanzoni) {
         }
     }
     try {
-        const mongoClinet = await connectToCluster();
-        const db = mongoClinet.db('TWM');
+        const db = mongoClient.db('TWM');
         const collection = db.collection('Canzoni');
         try {
             let result = await collection.find({ "_id": { $in: idCanzoni.map(id => new ObjectId(id)) } }).toArray();
@@ -69,9 +64,6 @@ async function canzoniMultipleDB(idCanzoni) {
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
-        } finally {
-            console.log('Chiusura connessione al db');
-            await mongoClinet.close();
         }
     } catch (error) {
         console.log("errore nella connessione al db: " + error);
@@ -85,8 +77,7 @@ async function modificaCanzonePlaylist(idPlaylist, idCanzone) {
         return {status: 'error', code: 400, error: "id non valido"};
     }
     try {
-    const mongoClinet = await connectToCluster();
-    const db = mongoClinet.db('TWM');
+    const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
         const params = { "_id": new ObjectId(idPlaylist), "tracce": idCanzone };
@@ -122,9 +113,6 @@ async function modificaCanzonePlaylist(idPlaylist, idCanzone) {
     } catch (error) {
         console.log(error);
         return {status: 'error', code: 500, error: error};
-    } finally {
-        console.log('Chiusura connessione al db');
-        closeMongo();
     }
     } catch (error) {
         console.log("errore nella connessione al db: " + error);

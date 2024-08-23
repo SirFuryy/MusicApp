@@ -1,9 +1,11 @@
 import { MongoClient } from "mongodb";
-let mongoClient;
+var mongoClient = await connectToCluster();
+console.log("mongoclient: ");
+console.log(mongoClient);
 
 async function connectToCluster() {
     try {
-        mongoClient = new MongoClient("mongodb+srv://SirFuryy:dY1MAUlJeqnvE2SD@twm-musicapp.waebfrt.mongodb.net/?retryWrites=true&w=majority");
+        let mongoClient = new MongoClient("mongodb+srv://SirFuryy:dY1MAUlJeqnvE2SD@twm-musicapp.waebfrt.mongodb.net/?retryWrites=true&w=majority");
         await mongoClient.connect();
         console.log('Connessione al database avvenuta con successo');
         return mongoClient;
@@ -12,4 +14,4 @@ async function connectToCluster() {
     }
 }
 
-export {connectToCluster};
+export {connectToCluster, mongoClient};

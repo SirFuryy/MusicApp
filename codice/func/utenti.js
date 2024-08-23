@@ -2,6 +2,7 @@ const amico = JSON.parse(sessionStorage.getItem('amico'));
 var amici = [];
 var playlist = [];
 const token = JSON.parse(sessionStorage.getItem('user')).token;
+const user = JSON.parse(sessionStorage.getItem('user'));
 
 
 
@@ -16,11 +17,34 @@ function onload() {
             desc += amico.generi[i] + ", ";
         }
     }
-    desc += ";\n Artista preferito: <u>" + amico.artistaPreferito + "</u>";
+    desc += "; <br> Artista preferito: <u>" + amico.artistaPreferito + "</u>";
     document.getElementById('descrizione').innerHTML = desc;
     
     caricaAmici();
     caricaPlaylist();
+}
+
+async function aggiungiAmico() {
+    await fetch(`http://localhost:3000/user/${user.id}/users/mod`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify({id: amico._id})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            alert('Amico aggiunto con successo' + data.value);
+        } else if (data.status === 'token error') {
+            //eseguo il logout
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        } else {
+            alert("Errore nell'aggiunta dell'amico" + data.error);
+        }
+    });
 }
 
 async function caricaAmici() {
@@ -81,7 +105,6 @@ async function caricaPlaylist() {
 
 function generaTabella() {
     const tabBody = document.getElementById('tabPlaylist');
-
     for (let i = 0; i < playlist.length; i++) {
         let tag = "";
         for (let j = 0; j < playlist[i].tag.length; j++) {
@@ -93,6 +116,10 @@ function generaTabella() {
         }
 
         const row = tabBody.insertRow();
+        row.onclick = function() {                  
+            sessionStorage.setItem('playlist', JSON.stringify(playlist[i]));
+            window.location.href = 'playlist.html';
+        };
         row.insertCell(0).innerHTML = playlist[i].titolo;
         row.insertCell(1).innerHTML = playlist[i].descrizione;
         row.insertCell(2).innerHTML = tag;
