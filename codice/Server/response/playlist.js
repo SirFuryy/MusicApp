@@ -9,7 +9,8 @@ const playlistSchema = z.object({
     titolo: z.string().min(2),
     descrizione: z.string().min(2),
     tag: z.array(z.string().min(2)).nonempty(),
-    durata: z.number().min(0)
+    durata: z.number().min(0),
+    autore: z.string().min(2)
 }).partial().strict();
 
 const idSchema = z.string().length(24);
@@ -187,28 +188,24 @@ async function creaPlaylist(idUtente, data) {
         return{status: 'error', code: 400, error: "id non valido"};
     }
     if (!playlistSchema.safeParse(data).success) {
-        return{status: 'error', code: 400, error: "dati non validi"};
+        return{status: 'error', code: 400, error: "dati non validi" + playlistSchema.safeParse(data).error};
     }
     try {
     const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
-        await collection.insertOne(data)
-        .then((result) => {
+        return await collection.insertOne(data)
+        .then(async (result) => {
             if (result.acknowledged) {
-                try {
-                    db.collection('Utenti').updateOne({ "_id": new ObjectId(idUtente) }, { $push: { playlist: result.insertedId.toString() } })
-                    .then((result) => {
-                        if (result.modifiedCount === 1) {
-                            return{status: 'ok', code: 201, value: result};
-                        } else {
-                            return{status: 'error', code: 500, error: "errore nella creazione della playlist"};
-                        }
-                    });
-                } catch (error) {
-                    console.log(error);
-                    return{status: 'error', code: 500, error: error};
-                }
+                let res = await db.collection('Utenti').updateOne({ "_id": new ObjectId(idUtente) }, { $push: { playlist: result.insertedId.toString() } })
+                .then((result) => {
+                    if (result.modifiedCount === 1) {
+                        return{status: 'ok', code: 201, value: result};
+                    } else {
+                        return{status: 'error', code: 500, error: "errore nella creazione della playlist"};
+                    }
+                });
+                return res;
             } else {
                 return{status: 'error', code: 500, error: "errore nella creazione della playlist"};
             }

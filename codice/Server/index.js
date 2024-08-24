@@ -31,9 +31,9 @@ const path = 'codice';
 let generi, artisti = [];
 var tokenlist = [
   {
-    token: 'ue5x83knhfm1801wqzppwzh',
+    token: '6yvqon61ii5urzpjegv64',
     user: 'alice92@example.com',
-    time: 1724402539450
+    time: 1724403488513
   }
 ];
 
@@ -90,7 +90,7 @@ app.post('/logout', checkToken, (req, res) => {   //effettua il logout
       break;   
     }
   }
-  res.status(200).json({ status:ok , code:200, value: "Logout effettuato"});
+  res.status(200).json({status: "ok" , code:200, value: "Logout effettuato"});
 });
 
 app.get('/user/:id/playlist', checkToken, async (req, res) => {  //restituisce le playlist dell'utente
@@ -245,10 +245,10 @@ app.delete('/user/:id', async (req, res) => {    //elimina un utente
     });
 });
 
-app.post('/playlist', async (req, res) => {    //crea una playlist
+app.post('/playlist', checkToken, async (req, res) => {    //crea una playlist
   console.log("** route " + req.url);
     const data = req.body;
-    await creaPlaylist(data)
+    await creaPlaylist(data.creatore, data)
     .then((result) => {
       res.status(result.code).json(result);
     });

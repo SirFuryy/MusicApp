@@ -86,7 +86,7 @@ body {
     --bg-color: #323232;
     --main-color: #dedede;
     position: relative;
-    width: 150px;
+    width: 155px;
     height: 40px;
     cursor: pointer;
     display: flex;
@@ -103,7 +103,7 @@ body {
   }
   
   .button .button__text {
-    transform: translateX(25px);
+    transform: translateX(5px);
     color: var(--font-color);
     font-weight: 600;
   }
@@ -141,3 +141,126 @@ body {
     transform: translate(3px, 3px);
     box-shadow: 0px 0px var(--main-color);
   }
+
+/* From Uiverse.io by vinodjangid07 */ 
+.deleteButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.deleteButton svg {
+  width: 44%;
+}
+.deleteButton:hover {
+  background-color: rgb(237, 56, 56);
+  overflow: visible;
+}
+.bin path {
+  transition: all 0.2s;
+}
+.deleteButton:hover .bin path {
+  fill: #fff;
+}
+.deleteButton:active {
+  transform: scale(0.98);
+}
+
+.tooltip {
+  --tooltip-color: rgb(41, 41, 41);
+  position: absolute;
+  top: -40px;
+  background-color: var(--tooltip-color);
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 8px 12px;
+  font-weight: 600;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.105);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.5s;
+}
+.tooltip::before {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  content: "";
+  background-color: var(--tooltip-color);
+  bottom: -10%;
+}
+.deleteButton:hover .tooltip {
+  opacity: 1;
+}
+
+
+
+/* From Uiverse.io by aaronross1 */ 
+.edit-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.edit-svgIcon {
+  width: 17px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button:hover {
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+  overflow: visible;
+}
+
+.edit-button:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+.edit-button:hover .tooltip {
+  opacity: 1;
+}

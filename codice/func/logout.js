@@ -18,3 +18,7 @@ async function logout(){
         }
     });
 }
+
+function libPers() {
+    window.location.replace("libreria.html");
+}

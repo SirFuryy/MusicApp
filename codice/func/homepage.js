@@ -13,12 +13,8 @@ function onload() {
     
 
     gestisciProprie();
-    setTimeout(() => {
-        gestisciPubbliche();
-    }, 2000);
-    setTimeout(() => {
-        gestisciAmici();
-    }, 2000);
+    gestisciPubbliche();
+    gestisciAmici();
 }
 
 function apriAmici(id) {
@@ -136,7 +132,6 @@ async function gestisciProprie() {
     })
     .then(res => res.json())
     .then((result) => {
-        console.log(result);
         if (result.status === 'ok') {
             playlistProprie = result.value;
             document.getElementById('testaPlaylist').innerHTML = `Le tue playlist  
