@@ -112,7 +112,7 @@ body {
     position: absolute;
     transform: translateX(109px);
     height: 100%;
-    width: 39px;
+    width: 0px;
     background-color: var(--bg-color-sub);
     display: flex;
     align-items: center;

@@ -8,6 +8,7 @@ import {utentiMisti, utenteSingolo, amiciUtente, modificaUtente, modificaSeguiti
 import {canzoneSingola, canzoneSingolaDB, canzoniMultiple, modificaCanzonePlaylist, canzoniMultipleDB} from "./response/song.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument  from "./swagger-output.json" assert { type: "json" };
+import cors from 'cors';
 const app = express();  // Creazione dell'app Express
 
 // Middleware per il parsing del corpo delle richieste
@@ -17,12 +18,15 @@ app.use(mongoSanitize());
 
 app.use(express.static('./public'));
 //opzioni per il CORS
-app.use((req, res, next)=>{         
-res.setHeader('Access-Control-Allow-Origin', '*')
-res.setHeader('Access-Control-Allow-Method', 'POST, GET, PUT, DELETE, OPTIONS')
-res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-next();
-})
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+  methods: "GET, PUT, POST, DELETE, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
+}
+app.use(cors(corsOptions));
+app.options('*', cors())
+
 //swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument ));
 
@@ -31,9 +35,9 @@ const path = 'codice';
 let generi, artisti = [];
 var tokenlist = [
   {
-    token: '6yvqon61ii5urzpjegv64',
+    token: '0b3dnhak2bwng0fwzejktb',
     user: 'alice92@example.com',
-    time: 1724403488513
+    time: 1724492772194
   }
 ];
 
@@ -135,7 +139,8 @@ app.get('/user', async (req, res) => {    //restituisce una lista di utenti
 app.get('/user/:id', async (req, res) => {    //restituisce un utente
   console.log("** route " + req.url);
     var id  = req.params.id;
-    await utenteSingolo(id)
+    var token = req.headers.authorization.replace("Bearer ", "");
+    await utenteSingolo(id, token)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -180,17 +185,24 @@ app.put('/user/:id', async (req, res) => {    //modifica un utente
     });
 });
 
-app.put('/user/:id/users/mod', checkToken, async (req, res) => {    //aggiunge/toglie un follow
+app.put('/user/:id/users', checkToken, async (req, res) => {    //aggiunge/toglie un follow
   console.log("** route " + req.url);
     var id  = req.params.id;
-    const data = req.body;
+    const data = req.body.id;
+    console.log(data);
     await modificaSeguiti(id, data)
     .then((result) => {
       res.status(result.code).json(result);
     });
 });
 
-app.put('/playlist/:id', async (req, res) => {    //modifica una playlist
+  /*
+    CONTROLLARE:
+      errore nello stack trace, status code non valido ex riga 194
+      controllare di non aggiungere lo stesso utente più volte
+  */ 
+
+app.put('/playlist/:id/modifica', checkToken, async (req, res) => {    //modifica una playlist
   console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body;
@@ -200,7 +212,7 @@ app.put('/playlist/:id', async (req, res) => {    //modifica una playlist
     });
 });
 
-app.put('/playlist/:id/songs', async (req, res) => {    //aggiunge/rimuove una canzone da una playlist
+app.put('/playlist/:id/songs', checkToken, async (req, res) => {    //aggiunge/rimuove una canzone da una playlist
   console.log("** route " + req.url);
     var id  = req.params.id;
     const {idCanzone, durata} = req.body;
@@ -212,18 +224,18 @@ app.put('/playlist/:id/songs', async (req, res) => {    //aggiunge/rimuove una c
         if (result.value === 'canzone inserita') {
           dur += durata;
           await modificaPlaylist(id, {durata: dur})
-          .then((res) => {
-            res.status(res.code).json(res);
+          .then((ress) => {
+            res.status(ress.code).json(ress);
           });
         } else {
           dur -= durata;
           await modificaPlaylist(id, {durata: dur})
-          .then((res) => {
-            res.status(res.code).json(res);
+          .then((ress) => {
+            res.status(ress.code).json(ress);
           });
         }
       }
-      res.status(result.code).json(result);
+      return res;
     });
 });
 

@@ -25,11 +25,11 @@ function onload() {
 }
 
 async function aggiungiAmico() {
-    await fetch(`http://localhost:3000/user/${user.id}/users/mod`, {
+    await fetch(`http://localhost:3000/user/${user.id}/users`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json; charset=utf-8'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({id: amico._id})
     })

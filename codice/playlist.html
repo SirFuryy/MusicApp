@@ -49,13 +49,13 @@
                                 >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Libreria personale</a>
+                                <a class="nav-link" href="libreria.html">Libreria personale</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Lista amici</a>
+                                <a class="nav-link" href="amici.html">Lista amici</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Modifica profilo</a>
+                                <a class="nav-link" href="profilo.html">Modifica profilo</a>
                             </li>
                         </ul>
                         <form class="d-flex my-2 my-lg-0">
@@ -110,15 +110,71 @@
                             </div>
                         </div>
                         <div class="col-2 d-flex flex-column">
-                            
                             <div class="row mt-auto">
                                 <div class="col-12"> 
-                                    <button type="button" class="button" id="btnAddSong">
+                                    
+                                </div>
+                            </div>
+                            <div class="row mt-auto">
+                                <div class="col-12"> 
+                                    <button type="button" class="button" id="btnModPlaylist" data-bs-toggle="modal" data-bs-target="#playlistMod" style="display: none;">
+                                        <span class="button__text">Modifica</span>
+                                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"></svg></span>
+                                      </button>
+                                    <button type="button" class="button mt-3" id="btnAddSong" data-bs-toggle="modal" data-bs-target="#songAdd">
                                         <span class="button__text">Nuova canzone</span>
                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
                                       </button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="playlistMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i dati della playlist</b></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Inserisci il titolo</label>
+                                        <input type="text" class="form-control" id="popupTitle" placeholder="Inserisci il titolo">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Inserisci la descrizione</label>
+                                        <textarea class="form-control" id="popupDescription" rows="3" placeholder="Inserisci la descrizione"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="popupPrivate" class="form-check-input">
+                                        <label for="privatePlaylist" class="form-check-label">Playlist privata</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tag1" class="form-label">Tag 1. Inserisci 4 tag che descrivano l'idea della playlist</label>
+                                        <input type="text" class="form-control" id="tag1" placeholder="Inserisci il primo tag">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tag2" class="form-label">Tag 2</label>
+                                        <input type="text" class="form-control" id="tag2" placeholder="Inserisci il secondo tag">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tag3" class="form-label">Tag 3</label>
+                                        <input type="text" class="form-control" id="tag3" placeholder="Inserisci il terzo tag">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tag4" class="form-label">Tag 4</label>
+                                        <input type="text" class="form-control" id="tag4" placeholder="Inserisci il quarto tag">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                            <button type="button" class="btn btn-primary" onclick="modificaPlaylist()">Modifica</button>
+                            </div>
+                        </div>
                         </div>
                     </div>
 

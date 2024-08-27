@@ -192,7 +192,12 @@ function creaCarte(elementi, tipo, nElementi) {
             const card = document.createElement("div");
             card.className = "card text-white bg-dark";
             card.id = elementi[j].titolo
-            card.setAttribute("onclick", "apri"+tipo+"('"+elementi[j]._id+"')");
+            if (tipo === "Playlist" || tipo === "Pubbliche") {
+                card.setAttribute("onclick", "apriPlaylist('"+elementi[j]._id+"')");
+            } else {
+                card.setAttribute("onclick", "apriAmici('"+elementi[j]._id+"')");
+            }
+            
             
             const cardBody = document.createElement("div");
             cardBody.className = "card-body";

@@ -7,12 +7,23 @@ function onload() {
     const seconds = playlist.durata % 60;
     document.getElementById('autore').innerHTML =playlist.autore + ' - ' + minutes + ':' + seconds;
 
-    
+    if (playlist.creatore === JSON.parse(sessionStorage.getItem('user')).id) {
+        document.getElementById('btnModPlaylist').style.display = 'flex';
+        document.getElementById('popupTitle').value = playlist.titolo;
+        document.getElementById('popupDescription').value = playlist.descrizione;
+        document.getElementById('tag1').value = playlist.tag[0];
+        document.getElementById('tag2').value = playlist.tag[1];
+        document.getElementById('tag3').value = playlist.tag[2];
+        document.getElementById('tag4').value = playlist.tag[3];
+        
+        if (playlist.pubblica) {
+            document.getElementById('popupPrivate').checked = false;
+        } else {
+            document.getElementById('popupPrivate').checked = true;
+        }
+    }
     
     caricaBrani();
-    for (let i = 0; i < playlist.tracce.length; i++) {
-        
-    }
 }
 
 async function caricaBrani() {
@@ -39,6 +50,101 @@ async function caricaBrani() {
             alert('Errore nel caricamento dei brani');
         }
     });   
+}
+
+async function modificaPlaylist() {
+    const titolo = document.getElementById('popupTitle').value;
+    const descrizione = document.getElementById('popupDescription').value;
+
+    if (titolo.trim() === '' || descrizione.trim() === '') {
+        alert('Il titolo e la descrizione non possono essere vuoti');
+        return;
+    }
+
+    const tag1 = document.getElementById('tag1').value;
+    const tag2 = document.getElementById('tag2').value;
+    const tag3 = document.getElementById('tag3').value;
+    const tag4 = document.getElementById('tag4').value;
+
+    if (tag1.trim() === '' || tag2.trim() === '' || tag3.trim() === '' || tag4.trim() === '') {
+        alert('Inserisci i quattro tag');
+        return;
+    }
+
+    const pubblica = document.getElementById('popupPrivate').checked;
+
+    await fetch(`http://localhost:3000/playlist/${playlist._id}/modifica`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem("user")).token}`
+        },
+        body: JSON.stringify({
+            titolo: titolo,
+            descrizione: descrizione,
+            tag: [tag1, tag2, tag3, tag4],
+            pubblica: !(pubblica)
+        })
+    })
+    .then(res => res.json())
+    .then((result) => {
+        console.log(result);
+        if (result.status === 'ok') {
+            alert('Playlist modificata con successo');
+            const newPlaylist = {
+                _id: playlist._id,
+                titolo: titolo,
+                descrizione: descrizione,
+                tag: [tag1, tag2, tag3, tag4],
+                pubblica: !(pubblica),
+                autore: playlist.autore,
+                creatore: playlist.creatore,
+                tracce: playlist.tracce,
+                durata: playlist.durata
+            };
+            sessionStorage.setItem('playlist', JSON.stringify(newPlaylist));
+            window.location.reload();
+        } else if (result.status === 'token error') {
+            //eseguo il logout
+            console.log('token error libreria');
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        } else {
+            alert('Errore nella modifica della playlist');
+        }
+    });
+}
+
+async function rimuoviCanzone(index) {
+    await fetch(`http://localhost:3000/playlist/${playlist._id}/songs`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem("user")).token}`
+        },
+        body: JSON.stringify({
+            idCanzone: brani[index]._id,
+            durata: brani[index].Durata
+        })
+    })
+    .then(res => res.json())
+    .then((result) => {
+        console.log(result);
+        if (result.status === 'ok') {
+            alert('Canzone rimossa con successo');
+            playlist.tracce.splice(index, 1);
+            brani.splice(index, 1);
+            sessionStorage.setItem('playlist', JSON.stringify(playlist));
+            window.location.reload();
+        } else if (result.status === 'token error') {
+            //eseguo il logout
+            console.log('token error libreria');
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        } else {
+            alert('Errore nella rimozione della canzone');
+        }
+    });
 }
 
 function generaTabella() {

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { connectToCluster, mongoClient } from "./connectMongo.js";
-import { z } from 'zod';
+import { record, z } from 'zod';
 
 const utenteSchema = z.object({
     id: z.string().length(24),
@@ -25,7 +25,14 @@ async function utentiMisti(limit) {
     const collection = db.collection('Utenti');
     try {
         let utenti = [];
-        await collection.find({}).limit(parseInt(limit)).toArray()
+        await collection.find({}, {projection: {
+            _id: 1,
+            nomeUtente: 1,
+            playlist: 1,
+            generi: 1,
+            artistaPreferito: 1,
+            utentiSeguiti: 1
+        }}).limit(parseInt(limit)).toArray()
         .then((result) => {
             utenti = result;
         });
@@ -45,7 +52,7 @@ async function utentiMisti(limit) {
     }
 }
 
-async function utenteSingolo(id) {
+async function utenteSingolo(id, tokenRichiedente) {
     if (!idSchema.safeParse(id).success) {
         return ({status: 'error', code: 400, error: "id non valido"});
     }
@@ -58,7 +65,19 @@ async function utenteSingolo(id) {
                 if (result === null) {
                     return {status: 'error', code: 404, error: "Nessun utente trovato con questo id: " + id};
                 } else {
-                    return {status: 'ok', code: 200, value: result};
+                    if (result.token === tokenRichiedente) {
+                        return {status: 'ok', code: 200, value: result};
+                    } else {
+                        let r = {
+                            _id: result._id,
+                            nomeUtente: result.nomeUtente,
+                            playlist: result.playlist,
+                            generi: result.generi,
+                            artistaPreferito: result.artistaPreferito,
+                            utentiSeguiti: result.utentiSeguiti
+                        }
+                        return {status: 'ok', code: 200, value: r};
+                    }
                 }
             });
             return result;
@@ -89,7 +108,14 @@ async function amiciUtente(id) {
         //cerco gli amici iterando su tutti gli id degli utenti seguiti
         let amici = [];
         for (let i = 0; i < utente.utentiSeguiti.length; i++) {
-            await collection.findOne({ "_id": new ObjectId(utente.utentiSeguiti[i]) })
+            await collection.findOne({ "_id": new ObjectId(utente.utentiSeguiti[i]) }, {projection: {
+                _id: 1,
+                nomeUtente: 1,
+                playlist: 1,
+                generi: 1,
+                artistaPreferito: 1,
+                utentiSeguiti: 1
+            }})
             .then((result) => {
                 amici.push(result);
             });
@@ -150,7 +176,7 @@ async function modificaSeguiti(id, idFollow) {
     }
 
     if (!idSchema.safeParse(idFollow).success) {
-        return {status: 'error', code: 400, error: "id utente da seguire non valido"};
+        return {status: 'error', code: 400, error: "id utente da seguire non valido " + idSchema.safeParse(idFollow).error};
     }
 
     try {

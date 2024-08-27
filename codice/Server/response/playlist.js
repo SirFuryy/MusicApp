@@ -131,7 +131,7 @@ async function modificaPlaylist(id, data) {
     }
 
     if (!playlistSchema.safeParse(data).success) {
-        return{status: 'error', code: 400, error: "dati non validi"};
+        return{status: 'error', code: 400, error: "dati non validi" + playlistSchema.safeParse(data).error};
     }
 
     try{
