@@ -78,3 +78,26 @@ Return delle route: {status, code, value, error}
 66bcdb88a2472518214ec051
 66bcdb97a2472518214ec052
 66bcdba7a2472518214ec053
+
+
+
+{
+  "_id": {
+    "$oid": "663f943d3b241530c0836ba2"
+  },
+  "creatore": "663f91c93b241530c0836b8e",
+  "pubblica": false,
+  "tracce": [
+    "66bcdae8a2472518214ec045"
+  ],
+  "titolo": "Jazz Lounge",
+  "descrizione": "Sip on your favorite drink and unwind to these jazzy tunes.",
+  "tag": [
+    "jazz",
+    "lounge",
+    "chill",
+    "relax"
+  ],
+  "durata": 215,
+  "autore": "emily_smith"
+}

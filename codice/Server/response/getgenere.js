@@ -7,6 +7,7 @@ async function getgenere() {
         spotifyApi = await getApi();
 
         const generi = await spotifyApi.getAvailableGenreSeeds();
+
         return generi.body.genres;
     } catch (error) {
         console.log(error);     

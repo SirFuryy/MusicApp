@@ -44,7 +44,7 @@ body {
     height: 4%;
 }
 
-#immagineAcc, #immagineReg, #confImmagineReg {      /*** immagine occhio form di registrazione ***/
+#immagineAcc, #immagineReg, #confImmagineReg, .imgModPass {      /*** immagine occhio form di registrazione ***/
     width: 25px;
     height: 20px;
 }

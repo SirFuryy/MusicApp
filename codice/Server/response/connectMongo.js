@@ -1,7 +1,5 @@
 import { MongoClient } from "mongodb";
 var mongoClient = await connectToCluster();
-console.log("mongoclient: ");
-console.log(mongoClient);
 
 async function connectToCluster() {
     try {

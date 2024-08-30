@@ -160,12 +160,16 @@
                                         <span class="button__text">Modifica</span>
                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
                                     </button>
-                                    <button type="button" class="button mb-3" id="btnModPassword" data-bs-toggle="modal" data-bs-target="#passwordMod">
-                                        <span class="button__text">Modifica Password</span>
+                                    <button type="button" class="button mt-3 mb-3" id="btnModPassword" data-bs-toggle="modal" data-bs-target="#passwordMod">
+                                        <span class="button__text">Cambia Password</span>
                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
                                     </button>
                                     <button type="button" class="button mb-3" id="btnModGeneri" data-bs-toggle="modal" data-bs-target="#generiMod">
                                         <span class="button__text">Modifica Generi</span>
+                                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                                    </button>
+                                    <button type="button" class="button mb-3" id="btnElimina" data-bs-toggle="modal" data-bs-target="#profiloElm">
+                                        <span class="button__text">Elimina Profilo</span>
                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
                                     </button>
                                 </div>
@@ -214,7 +218,7 @@
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="modificaDati()">Modifica</button>
+                            <button type="button" class="btn btn-primary" onclick="modificaProfilo()">Modifica</button>
                             </div>
                         </div>
                         </div>
@@ -235,7 +239,7 @@
 
                     <!-- Modal -->
                     <div class="modal fade" id="passwordMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+                        <div class="modal-dialog bg-dark">
                         <div class="modal-content">
                             <div class="modal-header">
                             <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica la password</b></h1>
@@ -243,30 +247,39 @@
                             </div>
                             <div class="modal-body">
                                 <form>
-                                    <div class="input-group mb-3">
+                                    <div class="mb-3">
+                                        <p class="text-danger" id="errorePass"></p>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="title" class="form-label">Inserisci la vecchia password</label>
-                                        <input type="password" class="form-control" id="passVecchia" required>
-                                        <div class="input-group-prepend">
-                                            <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Vecchia')">
-                                                <img src="img\occhiochiuso.png" id="immagineReg">
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="passVecchia" required>
+                                            <div class="input-group-prepend">
+                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Vecchia')">
+                                                    <img src="img\occhiochiuso.png" id="immagineVecchia" class="imgModPass">
+                                                </div>
                                             </div>
-                                        </div>
+                                        </div> 
                                     </div>
-                                    <div class="input-group mb-3">
+                                    <div class="mb-3">
                                         <label for="title" class="form-label">Inserisci la nuova password</label>
-                                        <input type="password" class="form-control" id="passNuova" required>
-                                        <div class="input-group-prepend">
-                                            <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Nuova')">
-                                                <img src="img\occhiochiuso.png" id="immagineReg">
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="passNuova" required>
+                                            <div class="input-group-prepend">
+                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Nuova')">
+                                                    <img src="img\occhiochiuso.png" id="immagineNuova" class="imgModPass">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="input-group mb-3">
+                                    <div class="mb-3">
                                         <label for="title" class="form-label">Ripeti la nuova password</label>
-                                        <input type="password" class="form-control" id="passRipet" required>
-                                        <div class="input-group-prepend">
-                                            <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Ripet')">
-                                                <img src="img\occhiochiuso.png" id="immagineReg">
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="passRipet" required>
+                                            <div class="input-group-prepend">
+                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Ripet')">
+                                                    <img src="img\occhiochiuso.png" id="immagineRipet" class="imgModPass">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -283,7 +296,7 @@
 
                     <!-- Modal -->
                     <div class="modal fade" id="generiMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+                        <div class="modal-dialog modal-dialog-scrollable bg-dark">
                         <div class="modal-content">
                             <div class="modal-header">
                             <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i tuoi generi preferiti</b></h1>
@@ -291,15 +304,51 @@
                             </div>
                             <div class="modal-body">
                                 <form>
-                                    <div class="input-group mb-3">
+                                    <div class="mb-3">
                                         <label for="title" class="form-label">Seleziona i generi che ti piacciono</label>
-                                        <input type="password" class="form-control" id="passVecchia" required>
+                                    </div>
+                                    <div class="mb-3" id="generiM">
+                                        
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="modificaPassword()">Modifica</button>
+                            <button type="button" class="btn btn-primary" onclick="modificaGeneri()">Modifica</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="profiloElm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog bg-dark">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Attenzione! Se premi il pulsante 'Elimina', il tuo account sarà eliminato permanentemente e non sarà possibile recuperarlo</b></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <p class="text-danger" id="avvisoPass"></p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Inserisci la password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="passCancella" required>
+                                            <div class="input-group-prepend">
+                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Cancella')">
+                                                    <img src="img\occhiochiuso.png" id="immagineCancella" class="imgModPass">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                            <button type="button" class="btn btn-primary" onclick="eliminaProfilo()">Elimina</button>
                             </div>
                         </div>
                         </div>

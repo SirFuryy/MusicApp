@@ -4,7 +4,7 @@ import {registrazione} from "./response/registrazione.js";
 import mongoSanitize from 'express-mongo-sanitize';
 import {login} from "./response/login.js";
 import {playlistPubbliche, playlistUtente, playlistSingola, modificaPlaylist, eliminaPlaylist, creaPlaylist } from "./response/playlist.js";
-import {utentiMisti, utenteSingolo, amiciUtente, modificaUtente, modificaSeguiti, eliminaUtente} from "./response/user.js";
+import {utentiMisti, utenteSingolo, amiciUtente, modificaUtente, modificaSeguiti, eliminaUtente, modificaPassword, modificaElencoPlaylist} from "./response/user.js";
 import {canzoneSingola, canzoneSingolaDB, canzoniMultiple, modificaCanzonePlaylist, canzoniMultipleDB} from "./response/song.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument  from "./swagger-output.json" assert { type: "json" };
@@ -32,12 +32,54 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument ));
 
 const uri = "mongodb+srv://SIrFuryy:<password>@ddp.mszpcku.mongodb.net/?retryWrites=true&w=majority";
 const path = 'codice';
-let generi, artisti = [];
+var generi = ['acoustic',          'afrobeat',       'alt-rock',
+  'alternative',       'ambient',        'anime',
+  'black-metal',       'bluegrass',      'blues',
+  'bossanova',         'brazil',         'breakbeat',
+  'british',           'cantopop',       'chicago-house',
+  'children',          'chill',          'classical',
+  'club',              'comedy',         'country',
+  'dance',             'dancehall',      'death-metal',
+  'deep-house',        'detroit-techno', 'disco',
+  'disney',            'drum-and-bass',  'dub',
+  'dubstep',           'edm',            'electro',
+  'electronic',        'emo',            'folk',
+  'forro',             'french',         'funk',
+  'garage',            'german',         'gospel',
+  'goth',              'grindcore',      'groove',
+  'grunge',            'guitar',         'happy',
+  'hard-rock',         'hardcore',       'hardstyle',
+  'heavy-metal',       'hip-hop',        'holidays',
+  'honky-tonk',        'house',          'idm',
+  'indian',            'indie',          'indie-pop',
+  'industrial',        'iranian',        'j-dance',
+  'j-idol',            'j-pop',          'j-rock',
+  'jazz',              'k-pop',          'kids',
+  'latin',             'latino',         'malay',
+  'mandopop',          'metal',          'metal-misc',
+  'metalcore',         'minimal-techno', 'movies',
+  'mpb',               'new-age',        'new-release',
+  'opera',             'pagode',         'party',
+  'philippines-opm',   'piano',          'pop',
+  'pop-film',          'post-dubstep',   'power-pop',
+  'progressive-house', 'psych-rock',     'punk',
+  'punk-rock',         'r-n-b',          'rainy-day',
+  'reggae',            'reggaeton',      'road-trip',
+  'rock',              'rock-n-roll',    'rockabilly',
+  'romance',           'sad',            'salsa', 
+  'samba',             'sertanejo',      'show-tunes',
+  'singer-songwriter', 'ska',            'sleep',
+  'songwriter',        'soul',           'soundtracks',
+  'spanish',           'study',          'summer',
+  'swedish',           'synth-pop',      'tango',
+  'techno',            'trance',         'trip-hop',
+  'turkish',           'work-out',       'world-music'];
+var artisti = [];
 var tokenlist = [
   {
-    token: '0b3dnhak2bwng0fwzejktb',
-    user: 'alice92@example.com',
-    time: 1724492772194
+    token: 'bcp352pf2qq78ij48dan54',
+    user: 'emily.smith@example.com',
+    time: 1724928586091
   }
 ];
 
@@ -46,9 +88,10 @@ app.options('*', (req, res) => {
 });
 
 // Definizione delle rotte
-app.get('/caricaGeneri', (req, res) => {      //restituisce i generi musicali
+app.get('/caricaGeneri', async (req, res) => {      //restituisce i generi musicali
   console.log("** route generi")
-    res.json(generi);
+    res.status(200).json({status: 'ok', code: 200, value: generi});
+
 });
 
 app.post('/registrazione', async (req, res) => {    //effettua la registrazione
@@ -79,7 +122,8 @@ app.post('/login', async (req, res) => {    //effettua il login
 app.post('/user/password', checkToken, async (req, res) => {    //modifica la password
   console.log("** route " + req.url);
   const data = req.body;
-  await modPassword(data)
+  const token = req.headers.authorization.replace("Bearer ", "");
+  await modificaPassword(data, token)
   .then((result) => {
       res.status(result.code).json(result);
   });
@@ -179,7 +223,8 @@ app.put('/user/:id', async (req, res) => {    //modifica un utente
   console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body;
-    await modificaUtente(id, data)
+    const token = req.headers.authorization.replace("Bearer ", "");
+    await modificaUtente(id, data, token)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -189,8 +234,8 @@ app.put('/user/:id/users', checkToken, async (req, res) => {    //aggiunge/togli
   console.log("** route " + req.url);
     var id  = req.params.id;
     const data = req.body.id;
-    console.log(data);
-    await modificaSeguiti(id, data)
+    const token = req.headers.authorization.replace("Bearer ", ""); 
+    await modificaSeguiti(id, data, token)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -207,6 +252,17 @@ app.put('/playlist/:id/modifica', checkToken, async (req, res) => {    //modific
     var id  = req.params.id;
     const data = req.body;
     await modificaPlaylist(id, data)
+    .then((result) => {
+      res.status(result.code).json(result);
+    });
+});
+
+app.put('/user/:id/playlist', checkToken, async (req, res) => {    //aggiunge/rimuove una playlist da un utente
+  console.log("** route " + req.url);
+    var id  = req.params.id;
+    const {idPlaylist} = req.body;
+    const token = req.headers.authorization.replace("Bearer ", "");
+    await modificaElencoPlaylist(id, idPlaylist, token)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -239,10 +295,12 @@ app.put('/playlist/:id/songs', checkToken, async (req, res) => {    //aggiunge/r
     });
 });
 
-app.delete('/playlist/:id', async (req, res) => {    //elimina una playlist
+app.delete('/playlist/:id', checkToken, async (req, res) => {    //elimina una playlist
   console.log("** route " + req.url);
     var id  = req.params.id;
-    await eliminaPlaylist(id)
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const idRichiedente = req.body.idRichiedente;
+    await eliminaPlaylist(id, token, idRichiedente)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -251,7 +309,9 @@ app.delete('/playlist/:id', async (req, res) => {    //elimina una playlist
 app.delete('/user/:id', async (req, res) => {    //elimina un utente
   console.log("** route " + req.url);
     var id = req.params.id;
-    await eliminaUtente(id)
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const password = req.body.password;
+    await eliminaUtente(id, token, password)
     .then((result) => {
       res.status(result.code).json(result);
     });
@@ -271,10 +331,12 @@ app.get('/search', async (req, res) => {    //ricerca
 });
 
 
+
 // Avvio del server
 const port = 3000;
 (async () => {          //riattiva la funzione getgenere ogni 24 ore
-    generi = await getgenere();
+    //generi = await getgenere();
+    
     setInterval(async () => {
       generi = await getgenere();
     }, 24 * 60 * 60 * 1000);

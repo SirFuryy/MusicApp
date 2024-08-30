@@ -75,7 +75,9 @@ async function caricaAmici() {
             //eseguo il logout
             sessionStorage.clear();
             window.location.replace("index.html");
-        } else {
+        } else if (data.status === 'void') {
+            document.getElementById('amici').innerHTML = 'Non segue nessun utente';
+        } else{
             alert('Errore nel caricamento degli amici');
         }
     });
@@ -97,6 +99,8 @@ async function caricaPlaylist() {
             //eseguo il logout
             sessionStorage.clear();
             window.location.replace("index.html");
+        } else if (data.status === 'void') {
+            document.getElementById('tabPlaylist').innerHTML = 'Nessuna playlist';
         } else {
             alert('Errore nel caricamento dei brani');
         }

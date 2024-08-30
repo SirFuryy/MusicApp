@@ -157,18 +157,45 @@ async function modificaPlaylist(id, data) {
     }
 }
 
-async function eliminaPlaylist(id) {
+async function eliminaPlaylist(id, token, idRichiedente) {
     if (!idSchema.safeParse(id).success) {
         return{status: 'error', code: 400, error: "id non valido"};
     }
+
+    if (!idSchema.safeParse(idRichiedente).success) {
+        return{status: 'error', code: 400, error: "id richiedente non valido"};
+    }
+
     try{
     const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');
     try {
+        let playlist = await collection.findOne({ "_id": new ObjectId(id) }, { projection: { _id: 1, creatore: 1} });
+        let utente = await db.collection('Utenti').findOne({ "_id": new ObjectId(idRichiedente) }, { projection: { _id: 1, token: 1, playlist: 1 } });
+        if (playlist === null) {
+            return{status: 'error', code: 404, error: "playlist non trovata"};
+        }
+        if (utente === null) {
+            return{status: 'error', code: 404, error: "utente non trovato"};
+        }
+        if (utente.token !== token) {
+            return{status: 'error', code: 401, error: "non autorizzato"};
+        }
+        if (playlist.creatore !== idRichiedente) {
+            return{status: 'error', code: 401, error: "non autorizzato a modificare la playlist"};
+        }
         return await collection.deleteOne({ "_id": new ObjectId(id) })
-        .then((result) => {
+        .then(async (result) => {
             if (result.deletedCount === 1) {
-                return{status: 'ok', code: 200, value: "playlist eliminata"};
+                utente.playlist.splice(utente.playlist.indexOf(id), 1);
+                return await db.collection('Utenti').updateOne({ "_id": new ObjectId(idRichiedente) }, { $set: { playlist: utente.playlist } })
+                .then((result) => {
+                    if (result.modifiedCount === 1) {
+                        return{status: 'ok', code: 200, value: "playlist eliminata"};
+                    } else {
+                        return{status: 'error', code: 500, error: "errore nella eliminazione della playlist"};
+                    }
+                });
             } else {
                 return{status: 'error', code: 404, error: "nessuna playlist eliminata"};
             }
