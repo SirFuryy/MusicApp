@@ -73,6 +73,10 @@ function generaTabella() {
             }
         }
         const row = tabBody.insertRow();
+        row.onclick = function() {
+            sessionStorage.setItem('amico', JSON.stringify(amici[i]));
+            window.location.href = 'utenti.html';
+        };
         row.insertCell(0).innerHTML = amici[i].nomeUtente;
         row.insertCell(1).innerHTML = amici[i].playlist.length;
         row.insertCell(2).innerHTML = amici[i].artistaPreferito;

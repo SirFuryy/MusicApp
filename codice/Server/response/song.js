@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { getApi } from './connectAPI.js';
 
 const idSchema = z.string().length(24);
+const idSpotify = z.string().length(22);
 
 //ritorna le informazioni di una canzone da spotify
 async function canzoneSingola(idCanzone) {
@@ -28,16 +29,30 @@ async function canzoniMultiple(idCanzoni) {
 }
 
 //ritorna le informazioni di una canzone dal database
-async function canzoneSingolaDB(idCanzone) {
-    if (!idSchema.safeParse(idCanzone).success) {
-        return {status: 'error', code: 400, error: "id non valido"};
+async function canzoneSingolaDB(idCanzone, type) {
+    if (type === 'spotifyId') {
+        if (!idSpotify.safeParse(idCanzone).success) {
+            return {status: 'error', code: 400, error: "id non valido"};
+        }
+    } else if (type === 'idDb') {
+        if (!idSchema.safeParse(idCanzone).success) {
+            return {status: 'error', code: 400, error: "id non valido"};
+        }
+    } else {
+        return {status: 'error', code: 400, error: "tipo non consentito"};
     }
+        
     try {
         const db = mongoClient.db('TWM');
         const collection = db.collection('Canzoni');
         try {
-            let result = await collection.findOne({ "_id": new ObjectId(idCanzone) });
+            if (type === 'spotifyId') {
+                let result = await collection.findOne({ "spotifyId": idCanzone });
+                return {status: 'ok', code: 200, value: result};
+            } else {
+                let result = await collection.findOne({ "_id": new ObjectId(idCanzone) });
             return {status: 'ok', code: 200, value: result};
+            }
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
@@ -74,8 +89,13 @@ async function canzoniMultipleDB(idCanzoni) {
 //aggiunge/toglie una canzone da una determinata playlist
 async function modificaCanzonePlaylist(idPlaylist, idCanzone) {
     if (!idSchema.safeParse(idPlaylist).success) {
-        return {status: 'error', code: 400, error: "id non valido"};
+        return {status: 'error', code: 400, error: "id playlist non valido"};
     }
+
+    if (!idSchema.safeParse(idCanzone).success) {
+        return {status: 'error', code: 400, error: "id canzone non valido"};
+    }
+
     try {
     const db = mongoClient.db('TWM');
     const collection = db.collection('Playlist');

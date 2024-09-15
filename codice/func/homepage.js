@@ -231,7 +231,10 @@ function creaCarte(elementi, tipo, nElementi) {
                 cardText.innerHTML = elementi[j].descrizione;
 
                 if (tipo === "Playlist") {
-                    cardFooter.innerHTML = Math.floor(elementi[j].durata / 60) + ":" + elementi[j].durata % 60;
+                    let min = Math.floor(elementi[j].durata / 60000);
+                    let sec = Math.floor((elementi[j].durata % 60000) / 1000);
+                    let secForm = sec < 10 ? '0' + sec : sec;
+                    cardFooter.innerHTML = min + ":" + secForm;
                 } else if (tipo === "Pubbliche") {
                     cardFooter.innerHTML = elementi[j].autore;
                 }

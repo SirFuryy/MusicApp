@@ -120,9 +120,10 @@ function generaTabella() {
         row.insertCell(0).innerHTML = playlist[i].titolo;
         row.insertCell(1).innerHTML = playlist[i].descrizione;
         row.insertCell(2).innerHTML = tag;
-        const minutes = Math.floor(playlist[i].durata / 60);
-        const seconds = playlist[i].durata % 60;
-        row.insertCell(3).innerHTML =  playlist[i].tracce.length + ' - ' + minutes + ':' + seconds;
+        const minutes = Math.floor(playlist[i].durata / 60000);
+        const seconds = Math.floor((playlist[i].durata % 60000) / 1000);
+        let formSeconds = seconds < 10 ? '0' + seconds : seconds;
+        row.insertCell(3).innerHTML =  playlist[i].tracce.length + ' - ' + minutes + ':' + formSeconds;
         if (playlist[i].creatore === id) {
             row.insertCell(4).innerHTML = `Si`;
         } else {

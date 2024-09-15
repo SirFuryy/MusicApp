@@ -6,6 +6,7 @@ import {login} from "./response/login.js";
 import {playlistPubbliche, playlistUtente, playlistSingola, modificaPlaylist, eliminaPlaylist, creaPlaylist } from "./response/playlist.js";
 import {utentiMisti, utenteSingolo, amiciUtente, modificaUtente, modificaSeguiti, eliminaUtente, modificaPassword, modificaElencoPlaylist} from "./response/user.js";
 import {canzoneSingola, canzoneSingolaDB, canzoniMultiple, modificaCanzonePlaylist, canzoniMultipleDB} from "./response/song.js";
+import { ricerca, ricercaConSpotify, ricercaCanzoniSpoty } from "./response/ricerca.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument  from "./swagger-output.json" assert { type: "json" };
 import cors from 'cors';
@@ -77,9 +78,9 @@ var generi = ['acoustic',          'afrobeat',       'alt-rock',
 var artisti = [];
 var tokenlist = [
   {
-    token: 'bcp352pf2qq78ij48dan54',
+    token: 'dzpeuq1vgh74drvdhstvgn',
     user: 'emily.smith@example.com',
-    time: 1724928586091
+    time: 1726416381717
   }
 ];
 
@@ -204,14 +205,15 @@ app.get('/user/:id/users', checkToken, async (req, res) => {    //restituisce la
 app.get('/song/:id', async (req, res) => {    //restituisce una canzone
   console.log("** route " + req.url);
     var id  = req.params.id;
-    await canzoneSingolaDB(id)
+    var {type} = req.query;
+    await canzoneSingolaDB(id, type)
     .then((result) => {
       res.status(result.code).json(result);
     });
 });
 
 app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
-  console.log("** route " + req.url);
+  console.log("** route POST " + req.url);
     const {idCanzoni} = req.body;
     await canzoniMultipleDB(idCanzoni)
     .then((result) => {
@@ -220,7 +222,7 @@ app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
 });
 
 app.put('/user/:id', async (req, res) => {    //modifica un utente
-  console.log("** route " + req.url);
+  console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const data = req.body;
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -231,7 +233,7 @@ app.put('/user/:id', async (req, res) => {    //modifica un utente
 });
 
 app.put('/user/:id/users', checkToken, async (req, res) => {    //aggiunge/toglie un follow
-  console.log("** route " + req.url);
+  console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const data = req.body.id;
     const token = req.headers.authorization.replace("Bearer ", ""); 
@@ -248,7 +250,7 @@ app.put('/user/:id/users', checkToken, async (req, res) => {    //aggiunge/togli
   */ 
 
 app.put('/playlist/:id/modifica', checkToken, async (req, res) => {    //modifica una playlist
-  console.log("** route " + req.url);
+  console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const data = req.body;
     await modificaPlaylist(id, data)
@@ -258,7 +260,7 @@ app.put('/playlist/:id/modifica', checkToken, async (req, res) => {    //modific
 });
 
 app.put('/user/:id/playlist', checkToken, async (req, res) => {    //aggiunge/rimuove una playlist da un utente
-  console.log("** route " + req.url);
+  console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const {idPlaylist} = req.body;
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -269,9 +271,12 @@ app.put('/user/:id/playlist', checkToken, async (req, res) => {    //aggiunge/ri
 });
 
 app.put('/playlist/:id/songs', checkToken, async (req, res) => {    //aggiunge/rimuove una canzone da una playlist
-  console.log("** route " + req.url);
+  console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const {idCanzone, durata} = req.body;
+    if (typeof durata !== 'number') {
+      return res.status(400).json({status: 'error', code: 400, error: "durata non valida"});
+    }
     await modificaCanzonePlaylist(id, idCanzone)
     .then(async (result) => {
       if (result.status === 'ok') {
@@ -290,13 +295,14 @@ app.put('/playlist/:id/songs', checkToken, async (req, res) => {    //aggiunge/r
             res.status(ress.code).json(ress);
           });
         }
+      } else {
+        return res.status(result.code).json(result);
       }
-      return res;
     });
 });
 
 app.delete('/playlist/:id', checkToken, async (req, res) => {    //elimina una playlist
-  console.log("** route " + req.url);
+  console.log("** route DEL " + req.url);
     var id  = req.params.id;
     const token = req.headers.authorization.replace("Bearer ", "");
     const idRichiedente = req.body.idRichiedente;
@@ -307,7 +313,7 @@ app.delete('/playlist/:id', checkToken, async (req, res) => {    //elimina una p
 });
 
 app.delete('/user/:id', async (req, res) => {    //elimina un utente
-  console.log("** route " + req.url);
+  console.log("** route DEL " + req.url);
     var id = req.params.id;
     const token = req.headers.authorization.replace("Bearer ", "");
     const password = req.body.password;
@@ -318,7 +324,7 @@ app.delete('/user/:id', async (req, res) => {    //elimina un utente
 });
 
 app.post('/playlist', checkToken, async (req, res) => {    //crea una playlist
-  console.log("** route " + req.url);
+  console.log("** route POST " + req.url);
     const data = req.body;
     await creaPlaylist(data.creatore, data)
     .then((result) => {
@@ -327,7 +333,21 @@ app.post('/playlist', checkToken, async (req, res) => {    //crea una playlist
 });
 
 app.get('/search', async (req, res) => {    //ricerca
-  console.log("** route " + req.url);
+  console.log("** route GET" + req.url);
+  const {input, type} = req.query;
+  console.log(input);
+  console.log(type);
+  if (type === 'song') {
+    await ricercaCanzoniSpoty(input)
+    .then((result) => {
+      res.status(result.code).json(result);
+    });
+  } else {
+    await ricercaConSpotify(input)
+    .then((result) => {
+      res.status(result.code).json(result);
+    });
+  }
 });
 
 
@@ -354,7 +374,11 @@ const port = 3000;
 function checkToken(req, res, next) {
   const currentTime = new Date().getTime(); 
   const tenMinutesAgo = new Date(currentTime - (1000 * 60 * 1000)).getTime(); 
-  
+
+  if (!req.headers.authorization) {
+    return res.status(401).json({status: "token error", code:401, message: "Token non presente"});
+  }
+
   const token = req.headers.authorization.replace("Bearer ", "");
   let trovato = false;
   for (let index = 0; index < tokenlist.length; index++) {

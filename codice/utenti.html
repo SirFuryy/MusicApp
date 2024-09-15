@@ -58,24 +58,29 @@
                                 <a class="nav-link" href="profilo.html">Modifica profilo</a>
                             </li>
                         </ul>
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
                         <form class="d-flex my-2 my-lg-0">
                             <input
                                 class="form-control me-sm-2"
                                 type="text"
                                 placeholder="Cerca una canzone, artista o album..."
+                                id="inputRicerca"
                             />
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >
+                            <button type="button" class="btn btn-outline-success my-2 my-sm-0" 
+                            data-bs-toggle="modal" data-bs-target="#modalRicerca" onclick="cerca('ricerca')">
                                 Cerca
                             </button>
                         </form>
-                        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                        <li class="nav-item ms-2">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                            onclick="logout()">
+                                Logout
+                            </button>
+                        </li>
+                    </ul>
+                        <ul class="navbar-nav me-auto mt-2 mt-lg-0 ml-2">
         
-                            <li class="nav-item">
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                                onclick="logout()">
-                                    Logout
-                                </button>
-                            </li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -113,9 +118,13 @@
                         <div class="col-2 d-flex flex-column">
                             
                             <div class="row mt-auto">
-                                <div class="col-12"> 
-                                    <button type="button" class="button" id="btnAddFriend" onclick="aggiungiAmico()">
+                                <div class="col-12" id="buttonFriend"> 
+                                    <button type="button" class="button" id="btnAddFriend" onclick="aggRemAmico()" style="display: none;">
                                         <span class="button__text">Aggiungi amico</span>
+                                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                                    </button>
+                                    <button type="button" class="button" id="btnRemFriend" onclick="aggRemAmico()" style="display: none;">
+                                        <span class="button__text">Rimuovi amico</span>
                                         <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
                                     </button>
                                 </div>
@@ -153,7 +162,6 @@
             </div>
             
         </main>
-
         <br>
         <br>
         <footer>
@@ -182,4 +190,110 @@
         <script src="func/utenti.js"></script>
         <script src="func/logout.js"></script>
     </body>
+
+    <!-- Modal RICERCA-->
+    <div class="modal fade" id="modalRicerca" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <form class="d-flex my-2 my-lg-0">
+                        <input
+                            class="form-control me-lg-2"
+                            type="text"
+                            placeholder="Cerca una canzone, artista o album..." value="" 
+                            id="inputModal"
+                        />
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="cerca('modal')">
+                            Cerca
+                        </button>
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listCanzoni">Canzoni:</label>
+                        <ul id="listCanzoni" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listPlaylist">Playlist:</label>
+                        <ul id="listPlaylist" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listUtenti">Utenti:</label>
+                        <ul id="listUtenti" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal SCEGLI PLAYLIST-->
+    <div class="modal fade" id="modalPlaylist" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="h4">Scegli una playlist</p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-md-9'>
+                            <p class='mb-1 fs-6' id="titAut"></p>
+                        </div>
+                        <div class='col-md-3'>
+                            <p class='mb-1 text-center' id="mn"></p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listScegliPlaylist">Playlist:</label>
+                        <ul class="list-group list-group-flush mt-2">
+                            <form id="listScegliPlaylist">
+                                <div class='row'>
+                                    <div class="col">
+                                        <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" class="btn btn-primary" onclick="modificaPlaylist()" id="buttonModalScegli">Aggiungi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>

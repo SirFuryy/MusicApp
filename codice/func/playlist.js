@@ -6,9 +6,10 @@ const proprietario = playlist.creatore === JSON.parse(sessionStorage.getItem('us
 function onload() {
     document.getElementById('titolo').innerHTML = playlist.titolo;
     document.getElementById('descrizione').innerHTML = playlist.descrizione;
-    const minutes = Math.floor(playlist.durata / 60);
-    const seconds = playlist.durata % 60;
-    document.getElementById('autore').innerHTML =playlist.autore + ' - ' + minutes + ':' + seconds;
+    const minutes = Math.floor(playlist.durata / 60000);
+    const seconds = Math.floor((playlist.durata % 60000) / 1000);
+    let formSeconds = seconds < 10 ? '0' + seconds : seconds;
+    document.getElementById('autore').innerHTML =playlist.autore + ' - ' + minutes + ':' + formSeconds;
 
     if (proprietario) {
         document.getElementById('btnModPlaylist').style.display = 'flex';
@@ -44,7 +45,7 @@ function onload() {
         }
     }
     
-    caricaBrani();
+    caricaBrani(); 
 }
 
 async function caricaBrani() {
@@ -62,6 +63,9 @@ async function caricaBrani() {
     .then(data => {
         if (data.status === 'ok') {
             brani = data.value;
+            brani.sort((a, b) => {
+                return playlist.tracce.indexOf(a._id) - playlist.tracce.indexOf(b._id);
+            });
             generaTabella();
         } else if (data.status === 'token error') {
             //eseguo il logout
@@ -152,9 +156,9 @@ async function rimuoviCanzone(index) {
     .then((result) => {
         console.log(result);
         if (result.status === 'ok') {
-            alert('Canzone rimossa con successo');
             playlist.tracce.splice(index, 1);
             brani.splice(index, 1);
+            alert('Canzone rimossa con successo');
             sessionStorage.setItem('playlist', JSON.stringify(playlist));
             window.location.reload();
         } else if (result.status === 'token error') {
@@ -169,13 +173,12 @@ async function rimuoviCanzone(index) {
 }
 
 function generaTabella() {
-    console.log(brani[0]);
+    console.log(brani);
     const tabBody = document.getElementById('tabCanzoni');
     
 
     for (let i = 0; i < brani.length; i++) {
         let Autori = "";
-        let generi = "";
         for (let j = 0; j < brani[i].Autore.length; j++) {
             if (j === brani[i].Autore.length - 1) {
                 Autori += brani[i].Autore[j];
@@ -184,23 +187,16 @@ function generaTabella() {
             }
         }
 
-        for (let j = 0; j < brani[i].Genere.length; j++) {
-            if (j === brani[i].Genere.length - 1) {
-                generi += brani[i].Genere[j];
-            } else {
-                generi += brani[i].Genere[j] + ", ";
-            }
-        }
         const row = tabBody.insertRow();
         row.insertCell(0).innerHTML = brani[i].Titolo;
         row.insertCell(1).innerHTML = Autori;
-        row.insertCell(2).innerHTML = generi;
-        const minutes = Math.floor(brani[i].Durata / 60);
-        const seconds = brani[i].Durata % 60;
-        row.insertCell(3).innerHTML =  minutes + ':' + seconds;
+        const minutes = Math.floor(brani[i].Durata / 60000);
+        const seconds = Math.floor((brani[i].Durata % 60000) / 1000);
+        let formSeconds = seconds < 10 ? '0' + seconds : seconds;
+        row.insertCell(2).innerHTML =  minutes + ':' + formSeconds;
         if (proprietario) {
             document.getElementById('colRimuovi').style.display = 'flex';
-            row.insertCell(4).innerHTML = `<button class="deleteButton" onclick="rimuoviCanzone(${i})">
+            row.insertCell(3).innerHTML = `<button class="deleteButton" onclick="rimuoviCanzone(${i})">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -254,7 +250,148 @@ function generaTabella() {
 </button></div>7
 */
 
-async function aggiungiCanzone(idCanzone, durata, titolo, autore, genere) {
+var canz = [];
+async function cercaCanzoni() {
+    var input = document.getElementById('inputInserisci').value
+
+    //chiamata al server
+    var token = JSON.parse(sessionStorage.getItem('user')).token;
+    await fetch(`http://localhost:3000/search?input=${input}&type=song`, {
+        method: 'GET',
+        headers: {
+            authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'ok') {
+            var canzoni = data.value;
+            canz = [...data.value];
+
+            //stampa le canzoni
+            var listaCanzoni = document.getElementById('listInsCanzoni');
+            listaCanzoni.innerHTML = '';
+            if (canzoni.length === 0) {         //se non ci sono canzoni
+                let li = document.createElement('button');
+                li.type = 'button';
+                li.className = 'list-group-item list-group-item-action';
+                li.innerHTML = '<p class="mb-1 fs-6">Nessuna canzone trovata</p>';
+                listaCanzoni.appendChild(li);
+            }
+            var i = 1;
+            canzoni.forEach(canzone => {
+                if (i > 4) return;
+                i++;
+                let li = creaLiCanzone(canzone);
+                listaCanzoni.appendChild(li);
+            });
+            canzoni.splice(0, 4);
+            if (canzoni.length > 0) {       //se ci sono più di 4 canzoni
+                let li = document.createElement('button');
+                li.type = 'button';
+                li.className = 'list-group-item list-group-item-action';
+                li.onclick = function() {altreCanzoni(canzoni)};
+                li.innerHTML = '<p class="mb-1 text-center fs-6">Altre canzoni</p>';
+                listaCanzoni.appendChild(li);
+            }
+
+            //funzione per stampare le altre canzoni
+            function altreCanzoni(canzoni) {
+                listaCanzoni.removeChild(listaCanzoni.lastChild);
+                canzoni.forEach(canzone => {
+                    let li = creaLiCanzone(canzone);
+                    listaCanzoni.appendChild(li);
+                });
+            }
+
+            //funzione per creare il li delle canzoni
+            function creaLiCanzone(canzone) {
+                let mn = function(){
+                    const minutes = Math.floor(canzone.Durata / 60000);
+                    const seconds = Math.floor((canzone.Durata % 60000) / 1000);
+                    const duration = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                    return duration;
+                };
+                let autori = '';
+                for (let i = 0; i < canzone.Autore.length-1; i++) {
+                    autori += `${canzone.Autore[i]}, `;
+                }
+                autori += canzone.Autore[canzone.Autore.length-1];3
+                let pas = canzone._id === undefined ? canzone.idSpotify : canzone._id;
+
+                let li = document.createElement('li');
+                li.className = 'list-group-item';
+                let html = `
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class='col-9'>
+                                <p class='mb-1 fs-6'><b>${canzone.Titolo}</b><br>${autori}</p>
+                            </div>
+                            <div class='col-3'>
+                                <p class='mb-1 text-end'>${mn()}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class='row'>
+                            <div class="col">
+                                <input type="radio" class="btn-check" name="canzPass" 
+                                id="${pas}" autocomplete="off">
+                                <label class="btn btn-outline-success" for="${pas}">Seleziona</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>` ;
+                li.innerHTML = html;
+                return li;
+            }
+        } else if (data.status === 'token error') {
+            alert('Errore nel token');
+            sessionStorage.clear();
+            window.location.replace('index.html');
+        } else {
+            alert('Errore nella ricerca');
+        }
+    });
+}
+
+async function aggiungiCanzone() {
+    var idCanzone = undefined;
+    const selectedRadio = document.querySelector('input[name="canzPass"]:checked');
+    if (selectedRadio) {
+        idCanzone = selectedRadio.id;
+    } else {
+        alert('Seleziona una canzone da aggiungere!');
+        return
+    }
+
+    if (idCanzone.length !== 24) {
+        await fetch(`http://localhost:3000/song/${idCanzone}?type=spotifyId`, {
+            method: 'GET',
+            headers: {
+                'autorization': `Bearer ${JSON.parse(sessionStorage.getItem('user')).token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                idCanzone = data.value._id;
+            } else if (data.status === 'token error') {
+                alert('Errore nel token');
+                sessionStorage.clear();
+                window.location.replace('index.html');
+            } else {
+                alert('Errore nell\'inserimento della canzone');
+            }
+        });
+    }
+
+    const canzone = canz.find(item => item._id === idCanzone);
+    const { Titolo, Autore, Durata } = canzone;
+
     await fetch(`http://localhost:3000/playlist/${playlist._id}/songs`, {
         method: 'PUT',
         headers: {
@@ -263,7 +400,7 @@ async function aggiungiCanzone(idCanzone, durata, titolo, autore, genere) {
         },
         body: JSON.stringify({
             idCanzone: idCanzone,
-            durata: durata
+            durata: Durata
         })
     })
     .then(res => res.json())
@@ -274,10 +411,9 @@ async function aggiungiCanzone(idCanzone, durata, titolo, autore, genere) {
             playlist.tracce.push(idCanzone);
             brani.push({
                 _id: idCanzone,
-                Titolo: titolo,
-                Autore: autore,
-                Genere: genere,
-                Durata: durata
+                Titolo: Titolo,
+                Autore: Autore,
+                Durata: Durata
             });
             sessionStorage.setItem('playlist', JSON.stringify(playlist));
             window.location.reload();

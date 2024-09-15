@@ -142,75 +142,6 @@
                         </div>
                     </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="playlistMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i dati della playlist</b></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Inserisci il titolo</label>
-                                        <input type="text" class="form-control" id="popupTitle" placeholder="Inserisci il titolo">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="description" class="form-label">Inserisci la descrizione</label>
-                                        <textarea class="form-control" id="popupDescription" rows="3" placeholder="Inserisci la descrizione"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input type="checkbox" id="popupPrivate" class="form-check-input">
-                                        <label for="privatePlaylist" class="form-check-label">Playlist privata</label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tag1" class="form-label">Tag 1. Inserisci 4 tag che descrivano l'idea della playlist</label>
-                                        <input type="text" class="form-control" id="tag1" placeholder="Inserisci il primo tag">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tag2" class="form-label">Tag 2</label>
-                                        <input type="text" class="form-control" id="tag2" placeholder="Inserisci il secondo tag">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tag3" class="form-label">Tag 3</label>
-                                        <input type="text" class="form-control" id="tag3" placeholder="Inserisci il terzo tag">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tag4" class="form-label">Tag 4</label>
-                                        <input type="text" class="form-control" id="tag4" placeholder="Inserisci il quarto tag">
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="modificaPlaylist()">Modifica</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="playlistElm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog bg-dark">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Attenzione!</b></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <p>Se premi il pulstane elimina, la playlist verrà eliminatat definitivamente e non potrà più essere recuperata</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="eliminaPlaylist()">Elimina</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-12">   
                             <hr id="rowpeachpuff" class="border border-2 opacity-75">
@@ -225,7 +156,6 @@
                                     <tr>
                                         <th scope="col">Titolo</th>
                                         <th scope="col">Autori</th>
-                                        <th scope="col">Generi</th>
                                         <th scope="col">Durata</th>
                                         <th scope="col" id="colRimuovi" style="display: none;">Azioni</th>
                                     </tr>
@@ -271,4 +201,128 @@
         <script src="func/playlist.js"></script>
         <script src="func/logout.js"></script>
     </body>
+
+    <!-- Modal AGGIUNGI CANZONE-->
+    <div class="modal fade" id="songAdd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container-md">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Cerca la canzone da aggiungere</b></h1>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <form class="d-flex my-2 my-lg-0">
+                                    <input
+                                    class="form-control me-lg-2"
+                                    type="text"
+                                    placeholder="Cerca una canzone" value="" 
+                                    id="inputInserisci"
+                                    />
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="cercaCanzoni()" >
+                                        Cerca
+                                    </button>
+                                </form>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listCanzoni">Canzoni:</label>
+                        <ul class="list-group list-group-flush mt-2">
+                            <form id="listInsCanzoni">
+                                <li class="list-group-item">
+                                    <div class='row'>
+                                        <div class="col">
+                                            <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" class="btn btn-primary" onclick="aggiungiCanzone()">Aggiungi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal MODIFICA PLAYLIST -->
+    <div class="modal fade" id="playlistMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i dati della playlist</b></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Inserisci il titolo</label>
+                            <input type="text" class="form-control" id="popupTitle" placeholder="Inserisci il titolo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Inserisci la descrizione</label>
+                            <textarea class="form-control" id="popupDescription" rows="3" placeholder="Inserisci la descrizione"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <input type="checkbox" id="popupPrivate" class="form-check-input">
+                            <label for="privatePlaylist" class="form-check-label">Playlist privata</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tag1" class="form-label">Tag 1. Inserisci 4 tag che descrivano l'idea della playlist</label>
+                            <input type="text" class="form-control" id="tag1" placeholder="Inserisci il primo tag">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tag2" class="form-label">Tag 2</label>
+                            <input type="text" class="form-control" id="tag2" placeholder="Inserisci il secondo tag">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tag3" class="form-label">Tag 3</label>
+                            <input type="text" class="form-control" id="tag3" placeholder="Inserisci il terzo tag">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tag4" class="form-label">Tag 4</label>
+                            <input type="text" class="form-control" id="tag4" placeholder="Inserisci il quarto tag">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-primary" onclick="modificaPlaylist()">Modifica</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal ELIMINA PLAYLIST-->
+    <div class="modal fade" id="playlistElm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Attenzione!</b></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p>Se premi il pulstane elimina, la playlist verrà eliminatat definitivamente e non potrà più essere recuperata</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-primary" onclick="eliminaPlaylist()">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>

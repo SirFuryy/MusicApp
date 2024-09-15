@@ -22,9 +22,23 @@ function onload() {
     
     caricaAmici();
     caricaPlaylist();
+
+    let trovato = false;
+    for (let i=0; i<user.utentiSeguiti.length; i++) {
+        if (user.utentiSeguiti[i] === amico._id) {
+            trovato = true;
+            break;
+        }
+    }
+
+    if (trovato) {
+        document.getElementById('btnRemFriend').style.display = 'block';
+    } else {
+        document.getElementById('btnAddFriend').style.display = 'block';
+    }
 }
 
-async function aggiungiAmico() {
+async function aggRemAmico() {
     await fetch(`http://localhost:3000/user/${user.id}/users`, {
         method: 'PUT',
         headers: {
@@ -36,7 +50,11 @@ async function aggiungiAmico() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'ok') {
-            alert('Amico aggiunto con successo' + data.value);
+            if (data.value === 'Utente modificato in push') {
+                alert('Amico aggiunto con successo');
+            } else {
+                alert('Amico rimosso con successo');
+            }
         } else if (data.status === 'token error') {
             //eseguo il logout
             sessionStorage.clear();
@@ -127,8 +145,9 @@ function generaTabella() {
         row.insertCell(0).innerHTML = playlist[i].titolo;
         row.insertCell(1).innerHTML = playlist[i].descrizione;
         row.insertCell(2).innerHTML = tag;
-        const minutes = Math.floor(playlist[i].durata / 60);
-        const seconds = playlist[i].durata % 60;
-        row.insertCell(3).innerHTML =  playlist[i].tracce.length + ' - ' + minutes + ':' + seconds;
+        let min = Math.floor(playlist[i].durata / 60000);
+        let sec = Math.floor((playlist[i].durata % 60000) / 1000);
+        let secForm = sec < 10 ? '0' + sec : sec;
+        row.insertCell(3).innerHTML =  playlist[i].tracce.length + ' - ' + min + ':' + secForm;
     }
 }
