@@ -26,7 +26,7 @@ function mn(durata){
     return duration;
 }
 
-var canzoni = [];
+var canz = [];
 async function cerca(daDove) {
     //ottieni input
     if (daDove === 'modal') {
@@ -50,7 +50,8 @@ async function cerca(daDove) {
     .then(data => {
         console.log(data);
         if (data.status === 'ok') {
-            canzoni = data.value.canzoni;
+            var canzoni = data.value.canzoni;
+            canz = [...data.value.canzoni];
             var playlist = data.value.playlist;
             var utenti = data.value.utenti;
 
@@ -99,8 +100,8 @@ async function cerca(daDove) {
                 autori += canzone.Autore[canzone.Autore.length-1];
 
                 let i = 0;
-                for (i; i < canzoni.length; i++) {
-                    if (canzoni[i]._id === canzone._id || canzoni[i].idSpotify === canzone.idSpotify) break;
+                for (i; i < canz.length; i++) {
+                    if (canz[i]._id === canzone._id || canz[i].idSpotify === canzone.idSpotify) break;
                 }
 
                 let li = document.createElement('button');
@@ -125,12 +126,12 @@ async function cerca(daDove) {
             //stampa le playlist
             let listaPlaylist = document.getElementById('listPlaylist');
             listaPlaylist.innerHTML = '';
-            if (canzoni.length === 0) {
+            if (playlist.length === 0) {
                 let li = document.createElement('button');
                 li.type = 'button';
                 li.className = 'list-group-item list-group-item-action';
                 li.innerHTML = '<p class="mb-1 fs-6">Nessuna playlist trovata</p>';
-                listaCanzoni.appendChild(li);
+                listaPlaylist.appendChild(li);
             }
             var i = 1;
             playlist.forEach(elmPlaylist => {
@@ -320,7 +321,8 @@ async function cerca(daDove) {
 }
 
 async function scegliPlaylist(index) {
-    let canzone = canzoni[index];
+    console.log(index)
+    let canzone = canz[index];
 
     let autori = '';
     for (let i = 0; i < canzone.Autore.length-1; i++) {
@@ -410,6 +412,73 @@ async function scegliPlaylist(index) {
                 </div>
             </div>` ;
         listaPlaylist.appendChild(li);
+    });
+
+    document.getElementById('buttonModalScegli').onclick = function() {
+        modiPlaylist(index);
+    };
+}
+
+async function modiPlaylist(index) {
+    let canzone = canz[index];
+
+    var idPlaylist = undefined;
+    const selectedRadio = document.querySelector('input[name="playAdd"]:checked');
+    if (selectedRadio) {
+        idPlaylist = selectedRadio.id;
+    } else {
+        alert('Seleziona una playlist in cui aggiungere la canzone');
+        return
+    }
+
+    if (canzone._id === undefined) {
+        await fetch(`http://localhost:3000/song/${canzone._id}?type=spotifyId`, {
+            method: 'GET',
+            headers: {
+                'autorization': `Bearer ${JSON.parse(sessionStorage.getItem('user')).token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                canzone._id = data.value._id;
+            } else if (data.status === 'token error') {
+                alert('Errore nel token');
+                sessionStorage.clear();
+                window.location.replace('index.html');
+            } else {
+                alert('Errore nell\'inserimento della canzone');
+            }
+        });
+    }
+
+    await fetch(`http://localhost:3000/playlist/${idPlaylist}/songs`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem("user")).token}`
+        },
+        body: JSON.stringify({
+            idCanzone: canzone._id,
+            durata: canzone.Durata
+        })
+    })
+    .then(res => res.json())
+    .then((result) => {
+        console.log(result);
+        if (result.status === 'ok') {
+            alert('Canzone aggiunta con successo');
+            //playlist.tracce.push(canzone._id);
+            //sessionStorage.setItem('playlist', JSON.stringify(playlist));
+            window.location.reload();
+        } else if (result.status === 'token error') {
+            //eseguo il logout
+            console.log('token error libreria');
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        } else {
+            alert('Errore nella aggiunta della canzone');
+        }
     });
 }
 

@@ -7,7 +7,6 @@
     "express-mongo-sanitize": "^2.2.0",
     "mongodb": "^6.5.0",
     "request": "^2.88.2",
-    "sass": "^1.77.8",
     "spotify-web-api-node": "^5.0.2",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1",

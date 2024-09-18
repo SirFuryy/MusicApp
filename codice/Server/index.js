@@ -33,56 +33,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument ));
 
 const uri = "mongodb+srv://SIrFuryy:<password>@ddp.mszpcku.mongodb.net/?retryWrites=true&w=majority";
 const path = 'codice';
-var generi = ['acoustic',          'afrobeat',       'alt-rock',
-  'alternative',       'ambient',        'anime',
-  'black-metal',       'bluegrass',      'blues',
-  'bossanova',         'brazil',         'breakbeat',
-  'british',           'cantopop',       'chicago-house',
-  'children',          'chill',          'classical',
-  'club',              'comedy',         'country',
-  'dance',             'dancehall',      'death-metal',
-  'deep-house',        'detroit-techno', 'disco',
-  'disney',            'drum-and-bass',  'dub',
-  'dubstep',           'edm',            'electro',
-  'electronic',        'emo',            'folk',
-  'forro',             'french',         'funk',
-  'garage',            'german',         'gospel',
-  'goth',              'grindcore',      'groove',
-  'grunge',            'guitar',         'happy',
-  'hard-rock',         'hardcore',       'hardstyle',
-  'heavy-metal',       'hip-hop',        'holidays',
-  'honky-tonk',        'house',          'idm',
-  'indian',            'indie',          'indie-pop',
-  'industrial',        'iranian',        'j-dance',
-  'j-idol',            'j-pop',          'j-rock',
-  'jazz',              'k-pop',          'kids',
-  'latin',             'latino',         'malay',
-  'mandopop',          'metal',          'metal-misc',
-  'metalcore',         'minimal-techno', 'movies',
-  'mpb',               'new-age',        'new-release',
-  'opera',             'pagode',         'party',
-  'philippines-opm',   'piano',          'pop',
-  'pop-film',          'post-dubstep',   'power-pop',
-  'progressive-house', 'psych-rock',     'punk',
-  'punk-rock',         'r-n-b',          'rainy-day',
-  'reggae',            'reggaeton',      'road-trip',
-  'rock',              'rock-n-roll',    'rockabilly',
-  'romance',           'sad',            'salsa', 
-  'samba',             'sertanejo',      'show-tunes',
-  'singer-songwriter', 'ska',            'sleep',
-  'songwriter',        'soul',           'soundtracks',
-  'spanish',           'study',          'summer',
-  'swedish',           'synth-pop',      'tango',
-  'techno',            'trance',         'trip-hop',
-  'turkish',           'work-out',       'world-music'];
-var artisti = [];
-var tokenlist = [
-  {
-    token: 'dzpeuq1vgh74drvdhstvgn',
-    user: 'emily.smith@example.com',
-    time: 1726416381717
-  }
-];
+var generi = [];
+var tokenlist = [];
 
 app.options('*', (req, res) => {
   res.sendStatus(200);
@@ -92,7 +44,6 @@ app.options('*', (req, res) => {
 app.get('/caricaGeneri', async (req, res) => {      //restituisce i generi musicali
   console.log("** route generi")
     res.status(200).json({status: 'ok', code: 200, value: generi});
-
 });
 
 app.post('/registrazione', async (req, res) => {    //effettua la registrazione
@@ -113,7 +64,7 @@ app.post('/login', async (req, res) => {    //effettua il login
         const currentTime = new Date().getTime();
         tokenlist.push({token: result.value.token, user: result.value.email, time: currentTime});
         console.log(tokenlist);
-        res.status(result.code).json({status: result.status, user: result.value});
+        res.status(result.code).json({status: result.status, code: 200, user: result.value});
       } else {
         res.status(result.code).json(result);
       }
@@ -148,7 +99,6 @@ app.get('/user/:id/playlist', checkToken, async (req, res) => {  //restituisce l
     var token = req.headers.authorization.replace("Bearer ", "");
     await playlistUtente(id, token)
     .then((result) => {
-        console.log("qui fatto")
         res.status(result.code).json(result);
     });
 });
@@ -158,12 +108,11 @@ app.get('/playlist', checkToken, async (req, res) => {      //restituisce le pla
     const {limit} = req.query;
     playlistPubbliche(limit)
     .then((result) => {
-        console.log("playlist pubbliche torna con "+ result.value)
         res.status(result.code).json(result);
     });
 });
 
-app.get('/playlist/:id', async (req, res) => {   //restituisce la playlist con id specifico
+app.get('/playlist/:id', checkToken, async (req, res) => {   //restituisce la playlist con id specifico
   console.log("** route " + req.url);
     var id  = req.params.id;
     await playlistSingola(id)
@@ -172,7 +121,7 @@ app.get('/playlist/:id', async (req, res) => {   //restituisce la playlist con i
     });
 });
 
-app.get('/user', async (req, res) => {    //restituisce una lista di utenti
+app.get('/user', checkToken, async (req, res) => {    //restituisce una lista di utenti
   console.log("** route " + req.url);
     const {limit} = req.query;
     await utentiMisti(limit)
@@ -181,7 +130,7 @@ app.get('/user', async (req, res) => {    //restituisce una lista di utenti
     });
 });
 
-app.get('/user/:id', async (req, res) => {    //restituisce un utente
+app.get('/user/:id', checkToken, async (req, res) => {    //restituisce un utente
   console.log("** route " + req.url);
     var id  = req.params.id;
     var token = req.headers.authorization.replace("Bearer ", "");
@@ -194,7 +143,6 @@ app.get('/user/:id', async (req, res) => {    //restituisce un utente
 app.get('/user/:id/users', checkToken, async (req, res) => {    //restituisce la lista di amici di un utente
   console.log("** route " + req.url);
     var id  = req.params.id;
-    console.log("endpoint user")
     await amiciUtente(id)
     .then((result) => {
       console.log(result)
@@ -202,7 +150,7 @@ app.get('/user/:id/users', checkToken, async (req, res) => {    //restituisce la
     });
 });
 
-app.get('/song/:id', async (req, res) => {    //restituisce una canzone
+app.get('/song/:id', checkToken, async (req, res) => {    //restituisce una canzone
   console.log("** route " + req.url);
     var id  = req.params.id;
     var {type} = req.query;
@@ -212,7 +160,7 @@ app.get('/song/:id', async (req, res) => {    //restituisce una canzone
     });
 });
 
-app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
+app.post('/song', checkToken, async (req, res) => {    //restituisce una lista di canzoni
   console.log("** route POST " + req.url);
     const {idCanzoni} = req.body;
     await canzoniMultipleDB(idCanzoni)
@@ -221,7 +169,7 @@ app.post('/song', async (req, res) => {    //restituisce una lista di canzoni
     });
 });
 
-app.put('/user/:id', async (req, res) => {    //modifica un utente
+app.put('/user/:id', checkToken, async (req, res) => {    //modifica un utente
   console.log("** route PUT " + req.url);
     var id  = req.params.id;
     const data = req.body;
@@ -242,12 +190,6 @@ app.put('/user/:id/users', checkToken, async (req, res) => {    //aggiunge/togli
       res.status(result.code).json(result);
     });
 });
-
-  /*
-    CONTROLLARE:
-      errore nello stack trace, status code non valido ex riga 194
-      controllare di non aggiungere lo stesso utente più volte
-  */ 
 
 app.put('/playlist/:id/modifica', checkToken, async (req, res) => {    //modifica una playlist
   console.log("** route PUT " + req.url);
@@ -312,7 +254,7 @@ app.delete('/playlist/:id', checkToken, async (req, res) => {    //elimina una p
     });
 });
 
-app.delete('/user/:id', async (req, res) => {    //elimina un utente
+app.delete('/user/:id', checkToken, async (req, res) => {    //elimina un utente
   console.log("** route DEL " + req.url);
     var id = req.params.id;
     const token = req.headers.authorization.replace("Bearer ", "");
@@ -332,21 +274,21 @@ app.post('/playlist', checkToken, async (req, res) => {    //crea una playlist
     });
 });
 
-app.get('/search', async (req, res) => {    //ricerca
+app.get('/search', checkToken, async (req, res) => {    //ricerca
   console.log("** route GET" + req.url);
   const {input, type} = req.query;
-  console.log(input);
-  console.log(type);
   if (type === 'song') {
     await ricercaCanzoniSpoty(input)
     .then((result) => {
       res.status(result.code).json(result);
     });
-  } else {
+  } else if (type === 'all') {
     await ricercaConSpotify(input)
     .then((result) => {
       res.status(result.code).json(result);
     });
+  } else {
+    res.status(400).json({status: 'error', code: 400, error: "tipo di ricerca non valido"});
   }
 });
 
@@ -355,7 +297,7 @@ app.get('/search', async (req, res) => {    //ricerca
 // Avvio del server
 const port = 3000;
 (async () => {          //riattiva la funzione getgenere ogni 24 ore
-    //generi = await getgenere();
+    generi = await getgenere();
     
     setInterval(async () => {
       generi = await getgenere();
@@ -381,6 +323,7 @@ function checkToken(req, res, next) {
 
   const token = req.headers.authorization.replace("Bearer ", "");
   let trovato = false;
+
   for (let index = 0; index < tokenlist.length; index++) {
     if (tokenlist[index].token === token) {
       trovato = true;
@@ -400,14 +343,5 @@ function checkToken(req, res, next) {
   if (!trovato) {
     console.log("token non trovato:", token);
     return res.status(401).json({status: "token error", code:401, message: "Token non valido"});
-  }
-}
-
-//restituisce la mail di un token
-function findMail(token){
-  for (let index = 0; index < tokenlist.length; index++) {
-    if (tokenlist[index].token === token) {
-      return tokenlist[index].user;
-    }
   }
 }

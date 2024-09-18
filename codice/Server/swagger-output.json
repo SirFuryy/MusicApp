@@ -13,7 +13,7 @@
   "paths": {
     "/caricaGeneri": {
       "get": {
-        "description": "",
+        "description": "restituisce i generi musicali",
         "responses": {
           "200": {
             "description": "OK"
@@ -23,46 +23,736 @@
     },
     "/registrazione": {
       "post": {
-        "description": "",
+        "description": "inserisce un nuovo utente nel database",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomeUtente": {
+                  "example": "Sir"
+                },
+                "password": {
+                  "example": "password"
+                },
+                "email": {
+                  "example": "luca.salvadori@example.it"
+                },
+                "nome": {
+                  "example": "Luca"
+                },
+                "cognome": {
+                  "example": "Salvadori"
+                },
+                "sesso": {
+                  "example": "M"
+                },
+                "dataNascita": {
+                  "example": "1998-01-01"
+                },
+                "generi": {
+                  "example": ["Rock", "Pop"]
+                },
+                "artistaPreferito": {
+                  "example": "Queen"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Documento creato"
+          },
+          "400": {
+            "description": "Dati non validi (uno o più)"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
     "/login": {
       "post": {
-        "description": "",
+        "description": "effettua il login",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "luca.salvadori@example.it"
+                },
+                "password": {
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "Login effettuato"
+          },
+          "400": {
+            "description": "Dati non validi"
+          },
+          "401": {
+            "description": "Credenziali non valide"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
     "/user/password": {
       "post": {
-        "description": "",
+        "description": "modifica la password dell'utente",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                },
+                "oldPassword": {
+                  "example": "password"
+                },
+                "newPassword": {
+                  "example": "newPassword"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200":{ 
+            "description": "Password modificata"
+          },
+          "400": {
+            "description": "Dati non validi"
+          },
+          "401": {
+            "description": "Non autorizzato"
+          },
+          "403": {
+            "description": "Non autorizzato a modificare la password"
+          },
+          "404" : {
+            "description": "Utente non trovato o password non corretta"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
     "/logout": {
       "post": {
-        "description": "",
+        "description": "effettua il logout",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}/playlist": {
+      "get": {
+        "description": "restituisce le playlist di un utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK o vodi"
+          },
+          "400": {
+            "description": "Id non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Utente non trovato"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "put": {
+        "description": "aggiugne o rimuove una playlist dall'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "idplaylist",
+            "in": "body",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playlist aggiunta o rimossa"
+          },
+          "400": {
+            "description": "Id utente o playlist non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Non autorizzato a modificare la playlist"
+          },
+          "404": {
+            "description": "Utente o playlist non trovati"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/playlist": {
+      "get": {
+        "description": "restituisce un numero di  playlist pubbliche",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "post": {
+        "description": "crea una nuova playlist",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "creatore": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                },
+                "pubblica": {
+                  "example": "true"
+                },
+                "titolo": {
+                  "example": "Playlist di Luca"
+                },
+                "descrizione": {
+                  "example": "Una playlist di Luca"
+                },
+                "tag": {
+                  "example": ["Rock", "Pop", "Queen"]
+                },
+                "canzoni": {
+                  "example": ["df2s4s6rty889dsce53sde45", "df2s4s6rty889dsce53sde46"]
+                },
+                "durata": {
+                  "example": "148060"
+                },
+                "autore": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Playlist creata"
+          },
+          "400": {
+            "description": "Dati non validi"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/playlist/{id}": {
+      "get": {
+        "description": "restiuisce la playlist con id specificato",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Playlist non trovata"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "delete": {
+        "description": "Elimina la playlist con id specificato",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
             "schema": {
               "type": "object",
               "properties": {
-                "token": {
-                  "example": "any"
+                "idRichiedente": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playlist eliminata"
+          },
+          "400": {
+            "description": "Id o id del richiedente non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Non autorizzato a eliminare la playlist"
+          },
+          "404": {
+            "description": "Playlist o utente non trovato"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "description": "restituisce una lista di utenti",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "description": "restituisce un utente specifico",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Utente non trovato"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "put": {
+        "description": "modifica i dati personali di un utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "example": "Luca"
+                },
+                "cognome": {
+                  "example": "Salvadori"
+                },
+                "sesso": {
+                  "example": "M"
+                },
+                "dataNascita": {
+                  "example": "1998-01-01"
+                },
+                "generi": {
+                  "example": ["Rock", "Pop"]
+                },
+                "artistaPreferito": {
+                  "example": "Queen"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utente modificato"
+          },
+          "400": {
+            "description": "Dati o id utente non validi"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Non autorizzato a modificare l'utente"
+          },
+          "404": {
+            "description": "Utente non trovato"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "delete": {
+        "description": "elimina un utente dal sistema",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "hfdskkdsfhe8"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utente eliminato"
+          },
+          "400": {
+            "description": "Password o id utente non validi"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Non autorizzato a eliminare l'utente"
+          },
+          "404": {
+            "description": "Utente non trovato o password non corretta"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/user/{id}/users": {
+      "get": {
+        "description": "restituisce la lista di amici di un utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK oppure void"
+          },
+          "400": {
+            "description": "Id non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Utente non trovato"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      },
+      "put": {
+        "description": "aggiunge oppure toglie un follower all'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Follower aggiunto o rimosso"
+          },
+          "400": {
+            "description": "Id utente o follower non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Non autorizzato a modificare i follower"
+          },
+          "404": {
+            "description": "Utente o follower non trovati"
+          },
+          "500": {
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/song/{id}": {
+      "get": {
+        "description": "restituisce una canzone con id specificato",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string",
+            "example": "spotifyId or idDb"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Id o tipo non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500":{
+            "description": "Errore del database"
+          }
+        }
+      }
+    },
+    "/song": {
+      "post": {
+        "description": "restituisce una lista di canzoni",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "idCanzoni": {
+                  "example": "[dzf2s4s6rty889dsce53sde45, dzf2s4s6rty889dsce53sde46]"
                 }
               }
             }
@@ -71,239 +761,95 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Id non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
-    "/user/{id}/playlist": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/playlist": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/playlist/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
+    "/playlist/{id}/modifica": {
       "put": {
-        "description": "",
+        "description": "modifica i dati di una playlist",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
+          },
           {
-            "name": "id",
-            "in": "path",
+            "name": "authorization",
+            "in": "header",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/user": {
-      "get": {
-        "description": "",
-        "parameters": [
+          },
           {
-            "name": "limit",
-            "in": "query",
-            "type": "string"
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titolo": {
+                  "example": "Playlist di Luca"
+                },
+                "descrizione": {
+                  "example": "Una playlist di Luca"
+                },
+                "tag": {
+                  "example": ["Rock", "Pop", "Queen"]
+                },
+                "canzoni": {
+                  "example": ["df2s4s6rty889dsce53sde45", "df2s4s6rty889dsce53sde46"]
+                },
+                "durata": {
+                  "example": "148060"
+                },
+                "autore": {
+                  "example": "df2s4s6rty889dsce53sde45"
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/user/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/user/{id}/users": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/song/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/song": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "Playlist modificata"
+          },
+          "400": {
+            "description": "Dati o id playlist non validi"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Playlist non trovata"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
     "/playlist/{id}/songs": {
       "put": {
-        "description": "",
+        "description": "aggiunge oppure toglie una canzone dalla playlist",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "required": true,
             "type": "string"
           },
@@ -314,28 +860,70 @@
               "type": "object",
               "properties": {
                 "idCanzone": {
-                  "example": "any"
+                  "example": "dzf2s4s6rty889dsce53sde45"
                 },
                 "durata": {
-                  "example": "any"
+                  "example": "259630"
                 }
               }
             }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "Canzone aggiunta o rimossa"
+          },
+          "400": {
+            "description": "Durata. id canzone o id playlist non valida"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Canzone o playlist non trovata, oppure errore nel calcolo della durata"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }
     },
     "/search": {
       "get": {
-        "description": "",
+        "description": "ricerca canzoni, playlist e/o utenti in base alla tipologia di ricerca richiesta",
+        "parameters": [
+          {
+            "name": "input",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string",
+            "example": "song o all"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Tipo di ricerca o input non valido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Nessun risultato trovato oppure errore nella ricerca della canzone da spotify"
+          },
+          "500": {
+            "description": "Errore del database"
           }
         }
       }

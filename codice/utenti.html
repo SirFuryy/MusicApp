@@ -90,15 +90,16 @@
         <br>
 
         <main>
+            <div class="container">
             <h1 id="prova"></h1>
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-md-3">
                             <img id="imgPlay" src="img\musicapp.jpg" alt="ciao">
                         </div>
-                        <div class="col-7 d-flex flex-column">
+                        <div class="col-md-7 d-flex flex-column">
                             <div class="row" id="titoloPlaylist">
                                 <div class="col-12">
                                     <p class="h2" id="Nome">Nome persona</h2>
@@ -115,7 +116,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 d-flex flex-column">
+                        <div class="col-md-2 d-flex flex-column">
                             
                             <div class="row mt-auto">
                                 <div class="col-12" id="buttonFriend"> 
@@ -133,14 +134,14 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12">   
+                        <div class="col-md-12">   
                             <hr id="rowpeachpuff" class="border border-2 opacity-75">
                         </div>
                     </div>
                     
                     
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-md-12">
                             <table class="table table-dark">
                                 <thead>
                                     <tr>
@@ -158,9 +159,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-1"></div>
+                <div class="col-md-1"></div>
             </div>
-            
+            </div>  
         </main>
         <br>
         <br>
@@ -253,7 +254,7 @@
 
     <!-- Modal SCEGLI PLAYLIST-->
     <div class="modal fade" id="modalPlaylist" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+        <div class="modal-dialog bg-dark">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="col-md">
@@ -291,7 +292,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                    <button type="button" class="btn btn-primary" onclick="modificaPlaylist()" id="buttonModalScegli">Aggiungi</button>
+                    <button type="button" class="btn btn-primary" id="buttonModalScegli">Aggiungi</button>
                 </div>
             </div>
         </div>

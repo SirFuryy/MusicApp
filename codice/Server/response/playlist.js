@@ -106,7 +106,7 @@ async function playlistSingola(id) {
             let result = await collection.findOne({ "_id": new ObjectId(id) })
             .then((result) => {
                 if (result === null) {
-                    return {status: 'error', code: 404, error: "Nessun utente torvato con questo id: "+id};
+                    return {status: 'error', code: 404, error: "Nessuna playlist torvato con questo id: "+id};
                 } else {
                     return {status: 'ok', code: 200, value: result};
                 }
@@ -182,7 +182,7 @@ async function eliminaPlaylist(id, token, idRichiedente) {
             return{status: 'error', code: 401, error: "non autorizzato"};
         }
         if (playlist.creatore !== idRichiedente) {
-            return{status: 'error', code: 401, error: "non autorizzato a modificare la playlist"};
+            return{status: 'error', code: 403, error: "non autorizzato a modificare la playlist"};
         }
         return await collection.deleteOne({ "_id": new ObjectId(id) })
         .then(async (result) => {

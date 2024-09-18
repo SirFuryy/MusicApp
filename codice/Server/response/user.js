@@ -1,6 +1,7 @@
-import { ObjectId } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { connectToCluster, mongoClient } from "./connectMongo.js";
 import { record, z } from 'zod';
+import bcrypt from 'bcryptjs';
 
 const utenteSchema = z.object({
     id: z.string().length(24),
@@ -334,27 +335,39 @@ async function eliminaUtente(id, token, password) {
 
     try {
         const db = mongoClient.db('TWM');
-        const collection = db.collection('Utenti');
+        var collection = db.collection('Utenti');
         try {
-            return await collection.findOne({ "_id": new ObjectId(id), "token": token }, {projection: {password: 1}}) 
-            .then((result) => {
-                if (result === null) {
-                    return {status: 'error', code: 404, error: "Nessun utente trovato con questo id: " + id};
-                }
+            var usr = await collection.findOne({ "_id": new ObjectId(id), "token": token }, {projection: {password: 1, playlist: 1}}) 
+            if (usr === null) {
+                return {status: 'error', code: 404, error: "Nessun utente trovato con questo id: " + id};
+            }
 
-                if (result.password !== password) {
-                    return {status: 'error', code: 404, error: "Password non corretta"};
-                }
+            if (usr.password !== password) {
+                return {status: 'error', code: 404, error: "Password non corretta"};
+            }
                 
-                return collection.deleteOne({ "_id": new ObjectId(id) })
-                .then((result) => {
-                    if (result.deletedCount === 0) {
-                        return {status: 'error', code: 404, error: "nessun utente eliminato con id: " + id};
-                    } else {
-                        return {status: 'ok', code: 200, value: "utente eliminato"};
-                    }
-                });
-            });
+            var elmUt = await collection.deleteOne({ "_id": new ObjectId(id) })
+                
+            if (elmUt.deletedCount === 0) {
+                return {status: 'error', code: 404, error: "nessun utente eliminato con id: " + id};
+            }
+
+            collection = db.collection('Playlist');
+            let pl = await collection.find({"creatore": new ObjectId(id)}, {projection: {id: 1}}).toArray();
+
+            for (let i = 0; i < pl.length; i++) {
+                let d = await collection.deleteOne({ "_id": new ObjectId(pl[i]._id) });
+
+                if (d.deletedCount === 0) {
+                    return {status: 'error', code: 404, error: "utente eliminato ma nessuna playlist eliminata con id: " + pl[i]._id};
+                }
+            }
+
+            collection = db.collection('Utenti');
+            await collection.updateMany({}, { $pull: { utentiSeguiti: new ObjectId(id) } })
+            await collection.updateMany({}, { $pull: { playlist: { $in: pl.map(p => new ObjectId(p._id)) } } });
+            return {status: 'ok', code: 200, value: "utente eliminato con successo da tutte le parti"};
+            
         } catch (error) {
             console.log(error);
             return {status: 'error', code: 500, error: error};
@@ -389,11 +402,15 @@ async function modificaPassword(data, token) {
     
     try {
         const user = await collection.findOne({"_id": new ObjectId(id)}, {projection: {password: 1, token: 1}});
+        console.log(user);
+        if (!user) {
+            return {status: 'error', code: 404, error: "Nessun utente trovato con questo id: " + id};
+        }
         if (user.token !== token) {
             return {status: 'error', code: 403, error: "Non sei autorizzato a modificare questo utente"};
         }
-
-        if(user.password!==data.passvecchia){
+        //user && bcrypt.compareSync(data.password, user.password)
+        if(!bcrypt.compareSync(data.passvecchia, user.password)){
             return {status: 'error', code: 404, error: "Le password non coincidono"};
         }
 

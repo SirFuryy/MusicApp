@@ -91,7 +91,7 @@ async function ricercaConSpotify(input) {
         
         let can = await ricercaCanzoniSpoty(input);
         if (can.status === 'error') {
-            return {status: 'error', code: 401, error: "errore nella ricerca delle canzoni"};
+            return {status: 'error', code: 404, error: "errore nella ricerca delle canzoni"};
         }
         let canzoni = can.value
         return {status: 'ok', code: 200, value: {utenti, playlist, canzoni}};

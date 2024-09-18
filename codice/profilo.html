@@ -58,19 +58,20 @@
                                 <a class="nav-link" href="profilo.html">Modifica profilo</a>
                             </li>
                         </ul>
-                        <form class="d-flex my-2 my-lg-0">
-                            <input
-                                class="form-control me-sm-2"
-                                type="text"
-                                placeholder="Cerca una canzone, artista o album..."
-                            />
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >
-                                Cerca
-                            </button>
-                        </form>
                         <ul class="navbar-nav me-auto mt-2 mt-lg-0">
-        
-                            <li class="nav-item">
+                            <form class="d-flex my-2 my-lg-0">
+                                <input
+                                    class="form-control me-sm-2"
+                                    type="text"
+                                    placeholder="Cerca una canzone, artista o album..."
+                                    id="inputRicerca"
+                                />
+                                <button type="button" class="btn btn-outline-success my-2 my-sm-0" 
+                                data-bs-toggle="modal" data-bs-target="#modalRicerca" onclick="cerca('ricerca')">
+                                    Cerca
+                                </button>
+                            </form>
+                            <li class="nav-item ms-2">
                                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
                                 onclick="logout()">
                                     Logout
@@ -85,15 +86,16 @@
         <br>
 
         <main>
+            <div class="container">
             <h1 id="prova"></h1>
             <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-md-3">
                             <img id="imgPlay" src="img\musicapp.jpg" alt="ciao">
                         </div>
-                        <div class="col-7 d-flex flex-column">
+                        <div class="col-md-7 d-flex flex-column">
                             <div class="row">
                                 <div class="col-12">
                                     <p class="h4" id="nomeUt"></h2>
@@ -152,7 +154,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 d-flex flex-column">
+                        <div class="col-md-2 d-flex flex-column">
                             
                             <div class="row mb-auto">
                                 <div class="col-12"> 
@@ -177,7 +179,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal -->
+                    <!-- Modal MODIFICA DATI PROFILO-->
                     <div class="modal fade" id="profiloMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
                         <div class="modal-content">
@@ -224,140 +226,10 @@
                         </div>
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="passwordMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog bg-dark">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica la password</b></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <p class="text-danger" id="errorePass"></p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Inserisci la vecchia password</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="passVecchia" required>
-                                            <div class="input-group-prepend">
-                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Vecchia')">
-                                                    <img src="img\occhiochiuso.png" id="immagineVecchia" class="imgModPass">
-                                                </div>
-                                            </div>
-                                        </div> 
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Inserisci la nuova password</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="passNuova" required>
-                                            <div class="input-group-prepend">
-                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Nuova')">
-                                                    <img src="img\occhiochiuso.png" id="immagineNuova" class="imgModPass">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Ripeti la nuova password</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="passRipet" required>
-                                            <div class="input-group-prepend">
-                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Ripet')">
-                                                    <img src="img\occhiochiuso.png" id="immagineRipet" class="imgModPass">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="modificaPassword()">Modifica</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="generiMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable bg-dark">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i tuoi generi preferiti</b></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Seleziona i generi che ti piacciono</label>
-                                    </div>
-                                    <div class="mb-3" id="generiM">
-                                        
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="modificaGeneri()">Modifica</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="profiloElm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog bg-dark">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Attenzione! Se premi il pulsante 'Elimina', il tuo account sarà eliminato permanentemente e non sarà possibile recuperarlo</b></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <p class="text-danger" id="avvisoPass"></p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="title" class="form-label">Inserisci la password</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="passCancella" required>
-                                            <div class="input-group-prepend">
-                                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Cancella')">
-                                                    <img src="img\occhiochiuso.png" id="immagineCancella" class="imgModPass">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                            <button type="button" class="btn btn-primary" onclick="eliminaProfilo()">Elimina</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
                 </div>
-                <div class="col-1"></div>
+                <div class="col-md-1"></div>
             </div>
-            
+            </div>
         </main>
 
         <br>
@@ -388,4 +260,227 @@
         <script src="func/profilo.js"></script>
         <script src="func/logout.js"></script>
     </body>
+
+    <!-- Modal MODIFICA PASSWORD-->
+    <div class="modal fade" id="passwordMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica la password</b></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <p class="text-danger" id="errorePass"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Inserisci la vecchia password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="passVecchia" required>
+                            <div class="input-group-prepend">
+                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Vecchia')">
+                                    <img src="img\occhiochiuso.png" id="immagineVecchia" class="imgModPass">
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Inserisci la nuova password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="passNuova" required>
+                            <div class="input-group-prepend">
+                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Nuova')">
+                                    <img src="img\occhiochiuso.png" id="immagineNuova" class="imgModPass">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Ripeti la nuova password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="passRipet" required>
+                            <div class="input-group-prepend">
+                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Ripet')">
+                                    <img src="img\occhiochiuso.png" id="immagineRipet" class="imgModPass">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+            <button type="button" class="btn btn-primary" onclick="modificaPassword()">Modifica</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <!-- Modal MODIFICA GENERI PREFERITI-->
+    <div class="modal fade" id="generiMod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable bg-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Modifica i tuoi generi preferiti</b></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Seleziona i generi che ti piacciono</label>
+                    </div>
+                    <div class="mb-3" id="generiM">
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+            <button type="button" class="btn btn-primary" onclick="modificaGeneri()">Modifica</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal ELIMINA PROFILO-->
+    <div class="modal fade" id="profiloElm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel"><b>Attenzione! Se premi il pulsante 'Elimina', il tuo account sarà eliminato permanentemente e non sarà possibile recuperarlo</b></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <p class="text-danger" id="avvisoPass"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Inserisci la password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="passCancella" required>
+                            <div class="input-group-prepend">
+                                <div class="btn btn-primary" id="mostraMod" onclick="showPassword('Cancella')">
+                                    <img src="img\occhiochiuso.png" id="immagineCancella" class="imgModPass">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+            <button type="button" class="btn btn-primary" onclick="eliminaProfilo()">Elimina</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal RICERCA-->
+    <div class="modal fade" id="modalRicerca" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <form class="d-flex my-2 my-lg-0">
+                        <input
+                            class="form-control me-lg-2"
+                            type="text"
+                            placeholder="Cerca una canzone, artista o album..." value="" 
+                            id="inputModal"
+                        />
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="cerca('modal')">
+                            Cerca
+                        </button>
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listCanzoni">Canzoni:</label>
+                        <ul id="listCanzoni" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listPlaylist">Playlist:</label>
+                        <ul id="listPlaylist" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listUtenti">Utenti:</label>
+                        <ul id="listUtenti" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal SCEGLI PLAYLIST-->
+    <div class="modal fade" id="modalPlaylist" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="h4">Scegli una playlist</p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-md-9'>
+                            <p class='mb-1 fs-6' id="titAut"></p>
+                        </div>
+                        <div class='col-md-3'>
+                            <p class='mb-1 text-center' id="mn"></p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listScegliPlaylist">Playlist:</label>
+                        <ul class="list-group list-group-flush mt-2">
+                            <form id="listScegliPlaylist">
+                                <div class='row'>
+                                    <div class="col">
+                                        <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" class="btn btn-primary" id="buttonModalScegli">Aggiungi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>

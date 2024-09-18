@@ -30,7 +30,7 @@ function onload() {
             break;
         }
     }
-
+    
     if (trovato) {
         document.getElementById('btnRemFriend').style.display = 'block';
     } else {
@@ -52,9 +52,14 @@ async function aggRemAmico() {
         if (data.status === 'ok') {
             if (data.value === 'Utente modificato in push') {
                 alert('Amico aggiunto con successo');
+                user.utentiSeguiti.push(amico._id);
+                sessionStorage.setItem('user', JSON.stringify(user));
             } else {
                 alert('Amico rimosso con successo');
+                user.utentiSeguiti.splice(user.utentiSeguiti.indexOf(amico._id), 1);
+                sessionStorage.setItem('user', JSON.stringify(user));
             }
+            window.location.reload();
         } else if (data.status === 'token error') {
             //eseguo il logout
             sessionStorage.clear();

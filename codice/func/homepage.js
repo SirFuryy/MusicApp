@@ -60,11 +60,17 @@ async function gestisciAmici() {
         if (result.status === 'ok') {
             amici = result.value;
             document.getElementById('testaAmici').innerHTML = `I tuoi amici  
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdAmici" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdAmici" data-bs-slide="prev">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+  <path d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+</svg></span>
             </button>
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdAmici" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdAmici" data-bs-slide="next">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+  <path d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+</svg></span>
             </button>`;
             creaCarte(result.value, "Amici", result.value.length);
         } else if (result.status === 'void') {
@@ -97,11 +103,17 @@ async function gestisciPubbliche() {
         if (result.status === 'ok') {
             playlistPubbliche = result.value;
             document.getElementById('testaPubbliche').innerHTML = `Playlist pubbliche più recenti  
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdPubbliche" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdPubbliche" data-bs-slide="prev">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+  <path d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+</svg></span>
             </button>
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdPubbliche" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdPubbliche" data-bs-slide="next">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+  <path d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+</svg></span>
             </button>`;
             console.log(result.value);
             creaCarte(result.value, "Pubbliche", result.value.length);
@@ -135,11 +147,17 @@ async function gestisciProprie() {
         if (result.status === 'ok') {
             playlistProprie = result.value;
             document.getElementById('testaPlaylist').innerHTML = `Le tue playlist  
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdPlaylist" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdPlaylist" data-bs-slide="prev">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+  <path d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+</svg></span>
             </button>
-            <button class="btn btn-primary" type="button" data-bs-target="#carouselIdPlaylist" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="btn btn-outline-light btn-sm" type="button" data-bs-target="#carouselIdPlaylist" data-bs-slide="next">
+                <span aria-hidden="true"><svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+  <path d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+</svg></span>
             </button>`;
             creaCarte(result.value, "Playlist", result.value.length);
         } else if (result.status === 'void') {

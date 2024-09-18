@@ -9,10 +9,8 @@ async function onload() {
         .then(res => res.json())
         .then((gener) => {
             console.log(gener);
-            elencoGeneri = gener;
+            elencoGeneri = gener.value;
     });
-
-    document.getElementById('nomeut').innerText = "Ciao ", data.nomeUtente, " , continua la registrazione:";
 
     caricaGeneri();
 };
@@ -90,16 +88,44 @@ async function registrazione() {
         body: JSON.stringify(data)
     })
     .then(res => res.json())
-    .then(res => {
+    .then(async (res) => {
         sessionStorage.clear();
         if (res.status === 'ok') {
-            sessionStorage.setItem('user', JSON.stringify({
-                id: res.id,
-                nomeUtente: nome
-            }));
-            window.location.href = 'homepage.html';
+            await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: data.password
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'ok') {
+                    // Login successful
+                    console.log("ciao" + result.user._id);
+                    dataUtente = {
+                        id: result.user._id,
+                        nomeUtente: result.user.nomeUtente,
+                        email: result.user.email,
+                        sesso: result.user.sesso,
+                        utentiSeguiti: result.user.utentiSeguiti,
+                        playlist: result.user.playlist,
+                        token: result.user.token
+                    }
+                    sessionStorage.setItem('user', JSON.stringify(dataUtente));
+                    // Redirect to homepage
+                    window.location.href = 'homepage.html';
+                } else {
+                    // Login failed
+                    document.getElementById('erroreLogin').innerHTML = '<b>Nome utente o password errati</b>';
+                    alert('Login failed');
+                }
+            })
         } else {
-            alert('Errore nella registrazione');
+            alert('Errore nella registrazione: ' + res.error);
         }
     });
 }
@@ -108,14 +134,28 @@ function caricaGeneri() {
     let generiDiv = document.getElementById('generiPreferiti');
 
     console.log(elencoGeneri);
+    let i = 0;
+    let row = document.createElement('div');
+    row.className = 'row mb-2 mx-1';
 
     elencoGeneri.forEach(gen => {
-        let genereDiv = document.createElement('div');
-        genereDiv.className = 'form-check';
-        genereDiv.innerHTML = `
-            <input class="form-check-input" type="checkbox" name="genere" value="${gen}">
-            <label class="form-check-label" for="">${gen}</label>
+        if (i === 4) {
+            generiDiv.appendChild(row);
+            row = document.createElement('div');
+            row.className = 'row mb-2 mx-1';
+            i = 0;
+        }
+        let col = document.createElement('div');
+        col.className = 'col-lg-3';
+        col.innerHTML = `
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="genere" value="${gen}" id="${gen}">
+            <label class="form-check-label mx-2" for="${gen}">${gen}</label>
+            </div>
         `;
-        generiDiv.appendChild(genereDiv);
+        row.appendChild(col);
+        i++;
     });
+
+    generiDiv.appendChild(row);
 }

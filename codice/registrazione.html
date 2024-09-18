@@ -100,63 +100,47 @@
                                 </div>
                             </div>
                             <form class="mt-4" id="formDati">
-                                
-                                <div class="row">
-                                    <div class="col-1 col-xxl-1">
+                                <div class="row mt-2">    
+                                    <div class="col-12 col-md-6">
                                         <label class="col-form-label">Nome</label>
+                                        <input type="text" id="Nome" placeholder="Nome" class="form-control" required>
                                     </div>
-                                    <div class="col-5 col-xxl-5">
-                                        <!-- Nome e cognome -->                               
-                                        <input type="text" id="Nome" placeholder="Nome" class="form-control" required>    
-                                    </div>
-                                    <div class="col-1 col-xxl-1">
+                                    <div class="col-12 col-md-6">
                                         <label class="col-form-label">Cognome</label>
-                                    </div>
-                                    <div class="col-5 col-xxl-5">
-                                        <input type="text" id="Cognome" placeholder="Cognome" class="form-control" required>                            
+                                        <input type="text" id="Cognome" placeholder="Cognome" class="form-control" required>
                                     </div>
                                 </div>
-
-                                <div class="row gx-3 gy-3 mt-2">
-                                    <div class="col-1 col-xxl-1">
+                                <div class="row mt-2">
+                                    <div class="col-12 col-md-6">
                                         <label class="col-form-label">Email</label>
+                                        <input type="email" id="emailReg" placeholder="Email" class="form-control" required>
                                     </div>
-                                    <div class="col-5 col-xxl-5">
-                                        <!-- Email -->
-                                            <input type="email" id="emailReg" placeholder="Email" class="form-control" required>
-                                    </div>
-
-                                    <!-- Sesso e data di nascita -->
-                                    <div class="col-1 col-xxl-1">
+                                    <div class="col-12 col-md-6">
                                         <label class="col-form-label">Sesso</label>
-                                    </div>
-                                    <div class="col-5 col-xxl-5">
                                         <select id="sesso" class="form-select form-select-bg mb-2" required>
                                             <option value="M">Maschio</option>
                                             <option value="F">Femmina</option>
-                                        </select>    
+                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="row gx-3 gy-3 mt-2">
-                                    <div class="col-2 col-xxl-2">
-                                        <label class="col-form-label">Data di nascita</label>
-                                    </div>
-                                    <div class="col-4 col-xxl-4">
-                                        <input type="date" id="dataNascita" class="form-control" required>    
-                                    </div>
-                                    <div class="col-3 col-xxl-3">
-                                        <label class="col-form-label">Inserisci un artista preferito</label>
-                                    </div>
-                                    <div class="col-3 col-xxl-3">
-                                        <input type="text" id="artistaPref" class="form-control" required>    
-                                    </div>
-
-                                </div>
-
+                
                                 <div class="row mt-2">
-                                    <div class="input-group mb-3" id="generiPreferiti">
+                                    <div class="col-12 col-md-6">
+                                        <label class="col-form-label">Data di nascita</label>
+                                        <input type="date" id="dataNascita" class="form-control" required>
                                     </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="col-form-label">Inserisci un artista preferito</label>
+                                        <input type="text" id="artistaPref" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="row gy-2 mt-2">
+                                    <label class="col-form-label">Seleziona i tuoi generi preferiti</label>
+                                    <div class="col-md-12" id="generiPreferiti">
+                                       
+                                    </div>
+                                    
                                 </div>     
 
                                 <!-- Bottone di registrazione -->

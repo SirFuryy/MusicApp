@@ -58,19 +58,21 @@
                                 <a class="nav-link" href="profilo.html">Modifica profilo</a>
                             </li>
                         </ul>
-                        <form class="d-flex my-2 my-lg-0">
-                            <input
-                                class="form-control me-sm-2"
-                                type="text"
-                                placeholder="Cerca una canzone, artista o album..."
-                            />
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-                                Cerca
-                            </button>
-                        </form>
                         <ul class="navbar-nav me-auto mt-2 mt-lg-0">
-        
-                            <li class="nav-item">
+                            <form class="d-flex my-2 my-lg-0">
+                                <input
+                                    class="form-control me-sm-2"
+                                    type="text"
+                                    placeholder="Cerca una canzone, artista o album..."
+                                    id="inputRicerca"
+                                />
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="button"
+                                data-bs-toggle="modal" data-bs-target="#modalRicerca" onclick="cerca('ricerca')">
+                                    Cerca
+                                </button>
+                            </form>
+    
+                            <li class="nav-item mx-2">
                                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="logout()">
                                     Logout
                                 </button>
@@ -100,23 +102,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h4 id="testaPlaylist">Le tue playlist 
-                                <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    data-bs-target="#carouselId"
-                                    data-bs-slide="prev"
-                                >
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                </button>
-                                <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    data-bs-target="#carouselId"
-                                    data-bs-slide="next"
-                                >
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                </button>
                             </h4>
+                            
                         </div>
                     </div>
                     <div class="row bg-dark" id="rigaPlaylist">
@@ -181,4 +168,110 @@
         <script src="func/homepage.js"></script>
         <script src="func/logout.js"></script>
     </body>
+
+    <!-- Modal RICERCA-->
+    <div class="modal fade" id="modalRicerca" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <form class="d-flex my-2 my-lg-0">
+                        <input
+                            class="form-control me-lg-2"
+                            type="text"
+                            placeholder="Cerca una canzone, artista o album..." value="" 
+                            id="inputModal"
+                        />
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="cerca('modal')">
+                            Cerca
+                        </button>
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listCanzoni">Canzoni:</label>
+                        <ul id="listCanzoni" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listPlaylist">Playlist:</label>
+                        <ul id="listPlaylist" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="div">
+                        <label for="listUtenti">Utenti:</label>
+                        <ul id="listUtenti" class="list-group list-group-flush mt-2">
+                            <div class='row'>
+                                <div class="col">
+                                    <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                </div>
+                            </div>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal SCEGLI PLAYLIST-->
+    <div class="modal fade" id="modalPlaylist" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" data-bs-theme="dark" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="h4">Scegli una playlist</p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-md-9'>
+                            <p class='mb-1 fs-6' id="titAut"></p>
+                        </div>
+                        <div class='col-md-3'>
+                            <p class='mb-1 text-center' id="mn"></p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="div">
+                        <label for="listScegliPlaylist">Playlist:</label>
+                        <ul class="list-group list-group-flush mt-2">
+                            <form id="listScegliPlaylist">
+                                <div class='row'>
+                                    <div class="col">
+                                        <p class='mb-1 fs-6'><b>Caricamento...</b></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="button" class="btn btn-primary" id="buttonModalScegli">Aggiungi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>

@@ -21,7 +21,7 @@ async function login(data) {
     const collection = db.collection('Utenti');
     try {
         const user = await collection.findOne({"email_text":data.email});
-        if(user && /*bcrypt.compareSync(data.password, user.password*/ data.password === user.password) {
+        if(user && bcrypt.compareSync(data.password, user.password)) {
             const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             console.log("creo "+token);
             const usr = {email: user.email_text, _id: user._id, nomeUtente: user.nomeUtente, utentiSeguiti: user.utentiSeguiti, playlist: user.playlist, sesso: user.sesso, token: token};
@@ -29,8 +29,6 @@ async function login(data) {
                 await collection.updateOne({"email_text":data.email}, {$set: {"token": token}})
                 .then((result) => {
                     if(result.matchedCount === 1) {
-
-            
                         return {status: 'ok', code: 200, value: usr};
                     } else {
                         return {status: 'error', code: 500, error: "Errore interno nell' aggiornamento del token"};
