@@ -1,38 +1,66 @@
-# MusicApp
+# 🎵 MusicApp  
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://img.shields.io/badge/build-passing-brightgreen.svg)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/SirFuryy/MusicApp/pulls)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://img.shields.io/badge/build-passing-brightgreen.svg)  
+[![License](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg)](LICENSE)  
 
-MusicApp è una webapp open-source per la simulazione di un SMM, ovvero un social media for music, in cui gli utenti possono creare le proprie playlist e condividerle con gli altri.  
-Questo progetto è stato sviluppata per l'esame del corso di Tecnologie Web e Mobile del corso di laurea Triennale in Informatica dell'Università di Milano - Statale
+**MusicApp** è una web app open-source che simula un **Social Media per la Musica (SMM)**, permettendo agli utenti di creare e condividere playlist personalizzate.  
 
-## Caratteristiche Principali del progetto
+Questo progetto è stato sviluppato come parte dell’esame del corso di **Tecnologie Web e Mobile** presso il **Corso di Laurea Triennale in Informatica dell'Università degli Studi di Milano - Statale**.  
 
-* **Gestione Playlist:** Creazione, modifica e gestione di playlist personalizzate.
-* **Ricerca Avanzata:** Ricerca rapida di brani, album e artisti utilizzando il dataset della [Web API di Spotify for developer](https://developer.spotify.com/documentation/web-api).
-* **Social Media:** Possibilità di conoscere altri utenti, aggiungere amici e condividere le playlist con loro.
-* **API Rest di supporto:** L'applicazione web fa capo ad un server con molteplici chiamate API accessibili a tutti.
-* **Sviluppo a 360 gradi:** Il progetto si compone dello sviluppo dell'intrfaccia, del FrontEnd, del BackEnd e del database non relazionale di base.
+---
 
-## Architettura
+## ✨ Funzionalità  
 
-MusicApp è sviluppata seguendo un'architettura pulita e modulare, basata sui principi REST.
+- 🎼 **Gestione Playlist** – Creazione, modifica e gestione di playlist personalizzate.  
+- 🔍 **Ricerca Avanzata** – Trova brani, album e artisti tramite le [Web API di Spotify for Developers](https://developer.spotify.com/documentation/web-api).  
+- 🌍 **Social Media Musicale** – Connettiti con altri utenti, aggiungi amici e condividi le tue playlist.  
+- 🔗 **API REST** – L'app è supportata da un backend con API REST accessibili pubblicamente.  
+- 🏗️ **Architettura Completa** – Sviluppo full-stack con **Frontend, Backend e Database**.  
 
-## Tecnologie Utilizzate
+---
 
-* **Javasript:** Linguaggio di programmazione principale per il FrontEnd.
-* **Node js:** Libreria di javasript usata per il BackEnd.
-* **HTML + Bootstrap:** Framework per il desing della webapp.
-* **MongoDB:** Database non relazionale per la gestione degli utenti e delle playlist.
+## 🏗️ Architettura  
 
-## Installazione
+MusicApp è progettata seguendo un'**architettura modulare** e basata sui principi REST.  
+Si compone di tre principali livelli:  
 
-1.  Clona il repository: `git clone https://github.com/SirFuryy/MusicApp.git`
-2.  Scegli un punto da cui far partire il server e da cui accedere alle web api.
-3.  Modifica il file index di node inserendo la porta da utilizzare e lancia il comando per avviare il server node
-4.  Apri la webapp alla pagina principale ed accedi a tutti i servizi
+1. **Frontend** – UI interattiva per la gestione delle playlist e l'interazione sociale.  
+2. **Backend** – Server Node.js per la gestione delle richieste, autenticazione e API REST.  
+3. **Database** – **MongoDB**, database NoSQL per la gestione di utenti e playlist.  
 
-## Licenza
+---
 
-MusicApp è rilasciato sotto la licenza GPL v3.0. Vedi il file [GNU GPL v3.0.](LICENSE) per maggiori dettagli.
+## 🔧 Tecnologie Utilizzate  
+
+| Componente  | Tecnologia |
+|-------------|-----------|
+| 🌐 **Frontend** | JavaScript, HTML, Bootstrap |
+| ⚙️ **Backend** | Node.js (Express.js) |
+| 🗄️ **Database** | MongoDB (NoSQL) |
+| 🔗 **API** | API sviluppate da me, Spotify Web API |
+
+---
+
+## 🚀 Installazione  
+
+### 1️⃣ Clona il repository  
+```sh
+git clone https://github.com/SirFuryy/MusicApp.git
+cd MusicApp
+```
+### 2️⃣ Configura il server
+Scegli la porta su cui eseguire il server
+Modifica il file index.js per impostare la porta
+### 3️⃣ Avvia il server
+```sh
+node index.js
+```
+### 4️⃣ Accedi all'app
+Apri il browser e visita la pagina principale della web app per iniziare a usare MusicApp.
+
+---
+
+📜 Licenza
+MusicApp è distribuita sotto licenza GPL v3.0.
+Consulta i dettagli qui: LICENSE.
+
