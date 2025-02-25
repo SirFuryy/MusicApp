@@ -60,7 +60,7 @@ Apri il browser e visita la pagina principale della web app per iniziare a usare
 
 ---
 
-📜 Licenza
+## 📜 Licenza
 MusicApp è distribuita sotto licenza GPL v3.0.
 Consulta i dettagli qui: LICENSE.
 
